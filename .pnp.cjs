@@ -31,7 +31,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jeve/lyrics-finder", "npm:1.0.1"],\
             ["@keyv/mongo", "npm:2.1.8"],\
             ["@sapphire/discord.js-utilities", "npm:6.0.3"],\
-            ["@sapphire/framework", "npm:4.2.1"],\
+            ["@sapphire/framework", "npm:4.2.2"],\
             ["@sapphire/pieces", "npm:3.6.0"],\
             ["@sapphire/plugin-hmr", "npm:2.0.0"],\
             ["@sapphire/plugin-logger", "npm:3.0.1"],\
@@ -1013,19 +1013,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@discordjs/builders", [\
-        ["npm:1.4.0", {\
-          "packageLocation": "./.yarn/cache/@discordjs-builders-npm-1.4.0-a4a1840393-3089ea5dc5.zip/node_modules/@discordjs/builders/",\
-          "packageDependencies": [\
-            ["@discordjs/builders", "npm:1.4.0"],\
-            ["@discordjs/util", "npm:0.1.0"],\
-            ["@sapphire/shapeshift", "npm:3.8.1"],\
-            ["discord-api-types", "npm:0.37.28"],\
-            ["fast-deep-equal", "npm:3.1.3"],\
-            ["ts-mixer", "npm:6.0.2"],\
-            ["tslib", "npm:2.4.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:1.5.0", {\
           "packageLocation": "./.yarn/cache/@discordjs-builders-npm-1.5.0-113dbf18f8-054bf38087.zip/node_modules/@discordjs/builders/",\
           "packageDependencies": [\
@@ -1085,13 +1072,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@discordjs/util", [\
-        ["npm:0.1.0", {\
-          "packageLocation": "./.yarn/cache/@discordjs-util-npm-0.1.0-24926f116a-880e15cd76.zip/node_modules/@discordjs/util/",\
-          "packageDependencies": [\
-            ["@discordjs/util", "npm:0.1.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:0.2.0", {\
           "packageLocation": "./.yarn/cache/@discordjs-util-npm-0.2.0-9d65b31a84-1e6c02a288.zip/node_modules/@discordjs/util/",\
           "packageDependencies": [\
@@ -1308,6 +1288,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["discord-api-types", "npm:0.37.28"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:3.0.1", {\
+          "packageLocation": "./.yarn/cache/@sapphire-discord-utilities-npm-3.0.1-2dc2b27122-3c52ffca56.zip/node_modules/@sapphire/discord-utilities/",\
+          "packageDependencies": [\
+            ["@sapphire/discord-utilities", "npm:3.0.1"],\
+            ["discord-api-types", "npm:0.37.36"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@sapphire/discord.js-utilities", [\
@@ -1316,6 +1304,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@sapphire/discord.js-utilities", "npm:6.0.3"],\
             ["@sapphire/discord-utilities", "npm:3.0.0"],\
+            ["@sapphire/duration", "npm:1.0.0"],\
+            ["@sapphire/utilities", "npm:3.11.0"],\
+            ["tslib", "npm:2.5.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:6.0.4", {\
+          "packageLocation": "./.yarn/cache/@sapphire-discord.js-utilities-npm-6.0.4-95070cf9c8-3b29b72764.zip/node_modules/@sapphire/discord.js-utilities/",\
+          "packageDependencies": [\
+            ["@sapphire/discord.js-utilities", "npm:6.0.4"],\
+            ["@sapphire/discord-utilities", "npm:3.0.1"],\
             ["@sapphire/duration", "npm:1.0.0"],\
             ["@sapphire/utilities", "npm:3.11.0"],\
             ["tslib", "npm:2.5.0"]\
@@ -1333,16 +1332,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@sapphire/framework", [\
-        ["npm:4.2.1", {\
-          "packageLocation": "./.yarn/cache/@sapphire-framework-npm-4.2.1-a5d4464616-d4c51ac8d7.zip/node_modules/@sapphire/framework/",\
+        ["npm:4.2.2", {\
+          "packageLocation": "./.yarn/cache/@sapphire-framework-npm-4.2.2-77554fb030-d155d839da.zip/node_modules/@sapphire/framework/",\
           "packageDependencies": [\
-            ["@sapphire/framework", "npm:4.2.1"],\
-            ["@discordjs/builders", "npm:1.4.0"],\
-            ["@sapphire/discord-utilities", "npm:3.0.0"],\
-            ["@sapphire/discord.js-utilities", "npm:6.0.3"],\
+            ["@sapphire/framework", "npm:4.2.2"],\
+            ["@discordjs/builders", "npm:1.5.0"],\
+            ["@sapphire/discord-utilities", "npm:3.0.1"],\
+            ["@sapphire/discord.js-utilities", "npm:6.0.4"],\
             ["@sapphire/lexure", "npm:1.1.2"],\
             ["@sapphire/pieces", "npm:3.6.0"],\
-            ["@sapphire/ratelimits", "npm:2.4.5"],\
+            ["@sapphire/ratelimits", "npm:2.4.6"],\
             ["@sapphire/result", "npm:2.6.0"],\
             ["@sapphire/stopwatch", "npm:1.5.0"],\
             ["@sapphire/utilities", "npm:3.11.0"]\
@@ -1417,14 +1416,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@sapphire/ratelimits", [\
-        ["npm:2.4.5", {\
-          "packageLocation": "./.yarn/cache/@sapphire-ratelimits-npm-2.4.5-ded6c256b7-e987d285c9.zip/node_modules/@sapphire/ratelimits/",\
-          "packageDependencies": [\
-            ["@sapphire/ratelimits", "npm:2.4.5"],\
-            ["@sapphire/timer-manager", "npm:1.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:2.4.6", {\
           "packageLocation": "./.yarn/cache/@sapphire-ratelimits-npm-2.4.6-643ba3b581-cbec157ea8.zip/node_modules/@sapphire/ratelimits/",\
           "packageDependencies": [\
@@ -1468,15 +1459,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@sapphire/stopwatch", "npm:1.5.0"],\
             ["tslib", "npm:2.4.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@sapphire/timer-manager", [\
-        ["npm:1.0.0", {\
-          "packageLocation": "./.yarn/cache/@sapphire-timer-manager-npm-1.0.0-6911800d43-2f131c2bf1.zip/node_modules/@sapphire/timer-manager/",\
-          "packageDependencies": [\
-            ["@sapphire/timer-manager", "npm:1.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2254,6 +2236,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/discord-api-types-npm-0.37.35-8de69c140e-0a65234eef.zip/node_modules/discord-api-types/",\
           "packageDependencies": [\
             ["discord-api-types", "npm:0.37.35"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:0.37.36", {\
+          "packageLocation": "./.yarn/cache/discord-api-types-npm-0.37.36-24392287f0-ba3de36402.zip/node_modules/discord-api-types/",\
+          "packageDependencies": [\
+            ["discord-api-types", "npm:0.37.36"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3165,7 +3154,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jeve/lyrics-finder", "npm:1.0.1"],\
             ["@keyv/mongo", "npm:2.1.8"],\
             ["@sapphire/discord.js-utilities", "npm:6.0.3"],\
-            ["@sapphire/framework", "npm:4.2.1"],\
+            ["@sapphire/framework", "npm:4.2.2"],\
             ["@sapphire/pieces", "npm:3.6.0"],\
             ["@sapphire/plugin-hmr", "npm:2.0.0"],\
             ["@sapphire/plugin-logger", "npm:3.0.1"],\
@@ -4522,13 +4511,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["ts-mixer", [\
-        ["npm:6.0.2", {\
-          "packageLocation": "./.yarn/cache/ts-mixer-npm-6.0.2-098b08cb68-cbe9935886.zip/node_modules/ts-mixer/",\
-          "packageDependencies": [\
-            ["ts-mixer", "npm:6.0.2"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:6.0.3", {\
           "packageLocation": "./.yarn/cache/ts-mixer-npm-6.0.3-d5b44d91b7-7fbaba0a41.zip/node_modules/ts-mixer/",\
           "packageDependencies": [\
