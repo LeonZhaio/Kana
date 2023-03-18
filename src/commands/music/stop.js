@@ -27,6 +27,8 @@ export class StopCommand extends Command {
         dispatcher.repeat = 'off';
         dispatcher.stopped = true;
         dispatcher.player.stopTrack();
+        await interaction.guild.members.me.voice.disconnect().catch(() => null);
+        await dispatcher.destroy().catch(() => null);
         await interaction.editReply({ embeds: [this.container.util.embed('success', 'Stopped the player.')] });
     }
 
@@ -39,6 +41,8 @@ export class StopCommand extends Command {
         dispatcher.repeat = 'off';
         dispatcher.stopped = true;
         dispatcher.player.stopTrack();
+        await interaction.guild.members.me.voice.disconnect().catch(() => null);
+        await dispatcher.destroy().catch(() => null);
         await msg.reply('Stopped the player.');
     }
 }
