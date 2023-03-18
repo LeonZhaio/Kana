@@ -156,7 +156,7 @@ export class PlayCommand extends Command {
         const source = qSource || interaction.options.getString('source') || 'ytmsearch';
         const search = await node.rest.resolve(`${source}:${query}`);
         if (search.loadType !== 'SEARCH_RESULT') return interaction.respond([{ name: PlayCommand.truncate(query, 97), value: query }]);
-        return interaction.respond(search.tracks.map((track) => ({ name: PlayCommand.truncate(`${track.info.title} - ${track.info.author}`, 97), value: track.info.uri })));
+        return interaction.respond(search.tracks.map((track) => ({ name: PlayCommand.truncate(`${track.info.title} - ${track.info.author}`, 97), value: track.info.uri }))).catch(() => null);
     }
 
     async whatsappRun({ args, msg, discordUser, voiceChannels, voice, sameVoice }) {
