@@ -23,7 +23,7 @@ export class StopCommand extends Command {
     async chatInputRun(interaction) {
         await interaction.deferReply();
         const dispatcher = this.container.queue.get(interaction.guildId);
-        dispatcher.queue?.length = 0;
+        if (dispatcher.queue) dispatcher.queue.length = 0;
         dispatcher.repeat = 'off';
         dispatcher.stopped = true;
         dispatcher.player.stopTrack();
@@ -37,7 +37,7 @@ export class StopCommand extends Command {
         if (voice === false) return await msg.reply('You are not in a voice channel.');
         if (sameVoice === false) return await msg.reply('You are not in the same voice channel as the bot.');
         if (!dispatcher) return await msg.reply('There is nothing playing.');
-        dispatcher.queue?.length = 0;
+        if (dispatcher.queue) dispatcher.queue.length = 0;
         dispatcher.repeat = 'off';
         dispatcher.stopped = true;
         dispatcher.player.stopTrack();
