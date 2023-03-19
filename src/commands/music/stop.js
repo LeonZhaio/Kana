@@ -41,7 +41,7 @@ export class StopCommand extends Command {
         dispatcher.repeat = 'off';
         dispatcher.stopped = true;
         dispatcher.player.stopTrack();
-        await interaction.guild.members.me.voice.disconnect().catch(() => null);
+        await dispatcher.guild.members.me.voice.disconnect().catch(() => null);
         await dispatcher.destroy().catch(() => null);
         await msg.reply('Stopped the player.');
     }
