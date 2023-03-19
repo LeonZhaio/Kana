@@ -10,7 +10,6 @@ export class HelpCommand extends Command {
         });
     }
 
-    /*
     registerApplicationCommands(registry) {
         registry.registerChatInputCommand((builder) => 
             builder
@@ -18,8 +17,21 @@ export class HelpCommand extends Command {
                 .setDescription(this.description)
         );
     }
-    */
     
+    async chatInputRun(interaction) {
+        const commands = this.container.stores.get('commands');
+        await interaction.reply(
+            tags.stripIndents`**__Kana's commands:__**
+            **Music:**
+            \`${commands.filter((command) => command.fullCategory.includes('music') && command.chatInputRun).map((command) => command.name).join('`, `')}\`
+            **Info:**
+            \`${commands.filter((command) => command.fullCategory.includes('info') && command.chatInputRun).map((command) => command.name).join('`, `')}\`
+            **Utility:**
+            \`${commands.filter((command) => command.fullCategory.includes('bot') && command.chatInputRun).map((command) => command.name).join('`, `')}\`
+            \nFor more information regarding Kana, type \`/info\`.`
+        );
+    }
+
     async whatsappRun ({ msg, args, author }) {
         const command = args.join(' ').toLowerCase().trim();
         const commands = this.container.stores.get('commands');
