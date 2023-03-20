@@ -85,7 +85,6 @@ export class ReadyListener extends Listener {
                 });
             }
             this.container.tracksPlayed = [];
-            this.container.tracksPlayed = 0;
             this.container.totalTracksPlayed = 0;
             this.container.totalDuration = 0;
             this.container.totalCommandsInvoked = 0;
