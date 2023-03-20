@@ -321,14 +321,11 @@ export class PlaylistCommand extends Subcommand {
         const pm = new PaginatedMessage();
         let motd = this.container.motd;
         if (!Object(motd) || !motd.enabled || motd?.text?.length <= 0) motd = { enabled: false };
-        let totalDuration = 0;
-        for (const track of tracks) totalDuration += track.info.length;
-        if (tracks.find(track => track.isStream == true)) totalDuration = '∞';
         if (chunked.length == 0) {
             pm.addPageEmbed((embed) => {
                 embed
                     .setAuthor({ name: `${playlist.info.name}`, iconURL: playlist.info.iconURL || undefined })
-                    .setDescription(`**ID:** \`${playlist.info.id}\`\n**Description:** ${playlist.info.description}\n**Owner:** <@${playlist.info.owner}>\n**Private:** ${playlist.info.private ? 'Yes' : 'No'}\n**Total duration:** ${prettyms(totalDuration, { colonNotation: true, secondsDecimalDigits: 0, millisecondsDecimalDigits: 0 })}\n\n**__Tracks:__**\n*No tracks in playlist.*`)
+                    .setDescription(`**ID:** \`${playlist.info.id}\`\n**Description:** ${playlist.info.description}\n**Owner:** <@${playlist.info.owner}>\n**Private:** ${playlist.info.private ? 'Yes' : 'No'}\n\n**__Tracks:__**\n*No tracks in playlist.*`)
                     .setColor('#cba6f7')
                     .setFooter(this.container.config.footer);
                 if (motd.enabled && motd.image) embed.setImage(motd.image);
@@ -345,7 +342,7 @@ export class PlaylistCommand extends Subcommand {
             pm.addPageEmbed((embed) => {
                 embed
                     .setAuthor({ name: `${playlist.info.name}`, iconURL: playlist.info.iconURL || undefined })
-                    .setDescription(`**ID:** \`${playlist.info.id}\`\n**Description:** ${playlist.info.description}\n**Owner:** <@${playlist.info.owner}>\n**Private:** ${playlist.private ? 'Yes' : 'No'}\n**Total duration:** ${prettyms(totalDuration, { colonNotation: true, secondsDecimalDigits: 0, millisecondsDecimalDigits: 0 })}\n\n**__Tracks:__**\n` + descriptionLines.join('\n'))
+                    .setDescription(`**ID:** \`${playlist.info.id}\`\n**Description:** ${playlist.info.description}\n**Owner:** <@${playlist.info.owner}>\n**Private:** ${playlist.private ? 'Yes' : 'No'}\n\n**__Tracks:__**\n` + descriptionLines.join('\n'))
                     .setColor('#cba6f7')
                     .setFooter(this.container.config.footer);
                 if (motd.enabled && motd.image) embed.setImage(motd.image);
