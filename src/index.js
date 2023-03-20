@@ -93,40 +93,5 @@ process.on('unhandledRejection', (error) => {
     container.logger.error(error);
 });
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-const cleanup = async () => {
-    container.logger.info('Cleaning up...');
-    const stats = await container.db.get('stats');
-    if (!stats) {
-        container.db.set('stats', {
-            tracksPlayed: container.tracksPlayed,
-            totalTracksPlayed: container.totalTracksPlayed,
-            totalDuration: container.totalTrackDuration,
-            totalCommandsInvoked: container.totalCommandsInvoked, 
-            totalUptime: process.uptime()
-        }).then(() => {
-            delay(5000);
-            process.exit();
-        });
-    } else {
-        container.db.set('stats', { 
-            tracksPlayed: [...stats.tracksPlayed, ...container.tracksPlayed], // List of tracks played by the bot ({ identifier, source, title, author })
-            totalTracksPlayed: container.totalTracksPlayed + stats.totalTracksPlayed, // Total number of tracks played by the bot
-            totalDuration: container.totalTrackDuration + stats.totalDuration, // Total duration of all tracks played by the bot (not including streams of course) in milliseconds
-            totalCommandsInvoked: container.totalCommandsInvoked + stats.totalCommandsInvoked, // Total number of commands invoked by users
-            totalUptime: process.uptime() + stats.totalUptime // Total uptime of the bot in seconds
-        }).then(() => {
-            delay(5000);
-            process.exit();
-        });
-    }
-};
-
-process.on('SIGTERM', cleanup);
-process.on('SIGINT', cleanup);
-process.on('SIGBREAK', cleanup);
-process.on('SIGUSR1', cleanup);
-process.on('SIGUSR2', cleanup);
-
 if (!container.runtimeArguments.includes('--no-discord') && !container.runtimeArguments.includes('-nd')) client.login(config.discordToken);
 if (!container.runtimeArguments.includes('--no-whatsapp') && !container.runtimeArguments.includes('-nw')) whatsapp.initialize();
