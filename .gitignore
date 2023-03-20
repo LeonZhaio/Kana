@@ -11,6 +11,7 @@
 #.pnp.*
 
 # Custom
+.vscode
 .wwebjs_auth
 .env
 config.js

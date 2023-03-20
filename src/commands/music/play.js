@@ -21,6 +21,10 @@ export class PlayCommand extends Command {
                     --youtube, -yt, yt:<query>: Search via YouTube
                     --youtubemusic, -ytm, ytm:<query>: Search via YouTube Music
                     --soundcloud, -sc, sc:<query>: Search via SoundCloud
+                    --spotify, -sp, sp:<query>: Search via Spotify
+                    --applemusic, -am, am:<query>: Search via Apple Music
+                    --deezer, -dz, dz:<query>: Search via Deezer
+                    --yandexmusic, -ym, ym:<query>: Search via Yandex Music
                     Additional arguments:
                     --playnext, -next, -n: Add the track to the top of the queue. If not specified, adds to the end.`;
     }
@@ -33,7 +37,8 @@ export class PlayCommand extends Command {
                 .setDMPermission(false)
                 .addStringOption((option) => 
                     option
-                        .setName('query').setDescription('What would you like to search? Supports URLs from many sources and search queries from 3 sources.')
+                        .setName('query')
+                        .setDescription('What would you like to search? Supports URLs from many sources and search queries from 3 sources.')
                         .setRequired(true)
                         .setAutocomplete(true)
                 )
@@ -45,7 +50,11 @@ export class PlayCommand extends Command {
                         .addChoices(
                             { name: 'YouTube Music / ytm', value: 'ytmsearch' },
                             { name: 'YouTube / yt', value: 'ytsearch' },
-                            { name: 'SoundCloud / sc', value: 'scsearch' }
+                            { name: 'SoundCloud / sc', value: 'scsearch' },
+                            { name: 'Spotify / sp', value: 'spsearch' },
+                            { name: 'Apple Music / am', value: 'amsearch' },
+                            { name: 'Deezer / dz', value: 'dzsearch' },
+                            { name: 'Yandex Music / ym', value: 'ymsearch' }
                         )
                 )
                 .addBooleanOption((option) => 
@@ -122,6 +131,18 @@ export class PlayCommand extends Command {
         } else if (query.includes('sc:')) {
             query = query.replace('sc:', '');
             qSource = 'scsearch';
+        } else if (query.includes('sp:')) {
+            query = query.replace('sp:', '');
+            qSource = 'spsearch';
+        } else if (query.includes('am:')) {
+            query = query.replace('am:', '');
+            qSource = 'amsearch:';
+        } else if (query.includes('dz:')) {
+            query = query.replace('dz:', '');
+            qSource = 'dzsearch';
+        } else if (query.includes('ym:')) {
+            query = query.replace('ym:', '');
+            qSource = 'ymsearch:';
         } else qSource = undefined;
         let search = await node.rest.resolve(`${qSource || 'ytmsearch'}:${query}`);
         if (!search?.tracks.length) search = await node.rest.resolve(`${qSource || 'ytmsearch'}:${query}`);
@@ -151,6 +172,18 @@ export class PlayCommand extends Command {
         } else if (query.includes('sc:')) {
             query = query.replace('sc:', '');
             qSource = 'scsearch';
+        } else if (query.includes('sp:')) {
+            query = query.replace('sp:', '');
+            qSource = 'spsearch';
+        } else if (query.includes('am:')) {
+            query = query.replace('am:', '');
+            qSource = 'amsearch:';
+        } else if (query.includes('dz:')) {
+            query = query.replace('dz:', '');
+            qSource = 'dzsearch';
+        } else if (query.includes('ym:')) {
+            query = query.replace('ym:', '');
+            qSource = 'ymsearch:';
         } else qSource = undefined;
         if (!query) return;
         const source = qSource || interaction.options.getString('source') || 'ytmsearch';
@@ -176,6 +209,18 @@ export class PlayCommand extends Command {
         } else if (query.includes('sc:') || query.includes('--soundcloud') || query.includes('-sc')) {
             query = query.replace('sc:', '').replace('--soundcloud', '').replace('-sc', '');
             qSource = 'scsearch';
+        } else if (query.includes('sp:') || query.includes('--spotify') || query.includes('-sp')) {
+            query = query.replace('sp:', '').replace('--spotify', '').replace('-sp', '');
+            qSource = 'spsearch';
+        } else if (query.includes('am:') || query.includes('--applemusic') || query.includes('-am')) {
+            query = query.replace('am:', '').replace('--applemusic', '').replace('-am', '');
+            qSource = 'amsearch';
+        } else if (query.includes('dz:') || query.includes('--deezer') || query.includes('-dz')) {
+            query = query.replace('dz:', '').replace('--deezer', '').replaec('-dz', '');
+            qSource = 'dzsearch';
+        } else if (query.includes('ym:') || query.includes('--yandexmusic') || query.includes('-ym')) {
+            query = query.replace('ym:', '').replace('--yandexmusic', '').replace('-ym', '');
+            qSource = 'ymsearch';
         } else qSource = 'ytmsearch';
         query = query.trim();
         if (!query) return msg.reply('Please provide a query.');

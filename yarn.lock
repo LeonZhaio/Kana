@@ -1176,6 +1176,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sapphire/pieces@npm:^3.6.1":
+  version: 3.6.1
+  resolution: "@sapphire/pieces@npm:3.6.1"
+  dependencies:
+    "@discordjs/collection": ^1.4.0
+    "@sapphire/utilities": ^3.11.0
+    tslib: ^2.5.0
+  checksum: df4a19dc7170f5c1be9402089f6a257d3ad4c454ef92b738e37e368521b0801b9f2865769fa3f8ea87d710b7fcbd58eb469b282d248260e7c32ea4b3c42a255e
+  languageName: node
+  linkType: hard
+
 "@sapphire/plugin-hmr@npm:^2.0.0":
   version: 2.0.0
   resolution: "@sapphire/plugin-hmr@npm:2.0.0"
@@ -2718,7 +2729,7 @@ __metadata:
     "@keyv/mongo": ^2.1.8
     "@sapphire/discord.js-utilities": ^6.0.4
     "@sapphire/framework": ^4.2.2
-    "@sapphire/pieces": ^3.6.0
+    "@sapphire/pieces": ^3.6.1
     "@sapphire/plugin-hmr": ^2.0.0
     "@sapphire/plugin-logger": ^3.0.1
     "@sapphire/plugin-pattern-commands": ^5.0.0
@@ -2735,9 +2746,10 @@ __metadata:
     lodash: ^4.17.21
     pretty-ms: ^8.0.0
     qrcode-terminal: ^0.12.0
+    short-unique-id: ^4.4.4
     shoukaku: ^3.3.1
     topgg-autoposter: ^2.0.1
-    whatsapp-web.js: ^1.19.4
+    whatsapp-web.js: ^1.19.5
   languageName: unknown
   linkType: soft
 
@@ -3643,6 +3655,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"short-unique-id@npm:^4.4.4":
+  version: 4.4.4
+  resolution: "short-unique-id@npm:4.4.4"
+  bin:
+    short-unique-id: bin/short-unique-id
+    suid: bin/short-unique-id
+  checksum: 3507f2e97326e49180dd4edbf41dd762a76c591df3fd5b7c1e7592bfb0c2f5724d63e626cc6f581c717d3111374811ca1d77a728ac07b0b9041b2355700124d4
+  languageName: node
+  linkType: hard
+
 "shoukaku@npm:^3.3.1":
   version: 3.3.1
   resolution: "shoukaku@npm:3.3.1"
@@ -4076,9 +4098,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"whatsapp-web.js@npm:^1.19.4":
-  version: 1.19.4
-  resolution: "whatsapp-web.js@npm:1.19.4"
+"whatsapp-web.js@npm:^1.19.5":
+  version: 1.19.5
+  resolution: "whatsapp-web.js@npm:1.19.5"
   dependencies:
     "@pedroslopez/moduleraid": ^5.0.2
     archiver: ^5.3.1
@@ -4097,7 +4119,7 @@ __metadata:
       optional: true
     unzipper:
       optional: true
-  checksum: 17f0d80558e044bfb4d1987a56f47fdd22c05b980ef0dbb77b6a9fa8963359fcabc25eaf1f759573109a692d0783f74e65486e6ec4ecee0fa49012105ee35c6d
+  checksum: 588d17e60e8fe850f1922223b011492ce9dace7bc217c3774211069cbbb01d2f5906f35acd35eb954ff169b39fd8c2c4bf6c34f08f08d3996a110765d758cf58
   languageName: node
   linkType: hard
 

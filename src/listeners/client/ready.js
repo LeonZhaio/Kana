@@ -10,6 +10,25 @@ export class ReadyListener extends Listener {
         });
     }
     async run (client) {
+        // Check for playlists database
+        let playlists = await this.container.db.get('playlists');
+        if (!playlists) {
+            playlists = {
+                '000000000000': {
+                    info: {
+                        id: '000000000000', // ID of the playlist (should be unique)
+                        name: '', // Name of the playlist
+                        description: '', // Playlist description
+                        owner: '', // ID of the playlist owner
+                        iconURL: '', // URL of the playlist icon
+                        private: true, // Set to false if the playlist can be accessed using its identifier
+                    },
+                    tracks: [] // Array of tracks
+                }
+            };
+            await this.container.db.set('playlists', playlists);
+        }
+
         const { username, id } = client.user;
         this.container.logger.info(`Logged in as ${username} (${id})`);
 

@@ -69,6 +69,8 @@ const whatsapp = new Client({
     puppeteer: { headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] },
 });
 
+const coll = process.env.TYPE == 'canary' ? 'kanadb2' : 'kanadb1';
+
 client.version = version;
 container.tracksPlayed = [];
 container.totalTracksPlayed = 0;
@@ -80,8 +82,8 @@ container.config = config;
 container.util = Util;
 container.queue = new Queue(client);
 container.webhook = new WebhookClient({ url: config.webhook });
-container.db = new Keyv(config.databaseUrl, { collection: 'kanadb1' });
-container.autoposter = AutoPoster(config.topggToken, client, { interval: 900000, postOnStart: true });
+container.db = new Keyv(config.databaseUrl, { collection: coll });
+if (config.topggToken) container.autoposter = AutoPoster(config.topggToken, client, { interval: 900000, postOnStart: true });
 container.shoukaku = new Shoukaku(new Connectors.DiscordJS(client), config.lavalink, {
     userAgent: `Kana-${version}`,
     reconnectTries: 10

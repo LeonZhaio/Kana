@@ -1,6 +1,6 @@
 {
   "name": "kana",
-  "version": "4.10.0",
+  "version": "5.0.0",
   "description": "A free Discord bot with WhatsApp integrations, made using Node.js and Discord.js, powered by Lavalink and the Sapphire Framework.",
   "main": "src/index.js",
   "type": "module",
@@ -30,7 +30,7 @@
     "@keyv/mongo": "^2.1.8",
     "@sapphire/discord.js-utilities": "^6.0.4",
     "@sapphire/framework": "^4.2.2",
-    "@sapphire/pieces": "^3.6.0",
+    "@sapphire/pieces": "^3.6.1",
     "@sapphire/plugin-hmr": "^2.0.0",
     "@sapphire/plugin-logger": "^3.0.1",
     "@sapphire/plugin-pattern-commands": "^5.0.0",
@@ -46,9 +46,10 @@
     "lodash": "^4.17.21",
     "pretty-ms": "^8.0.0",
     "qrcode-terminal": "^0.12.0",
+    "short-unique-id": "^4.4.4",
     "shoukaku": "^3.3.1",
     "topgg-autoposter": "^2.0.1",
-    "whatsapp-web.js": "^1.19.4"
+    "whatsapp-web.js": "^1.19.5"
   },
   "devDependencies": {
     "eslint": "^8.36.0"

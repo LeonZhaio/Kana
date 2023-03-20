@@ -32,7 +32,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@keyv/mongo", "npm:2.1.8"],\
             ["@sapphire/discord.js-utilities", "npm:6.0.4"],\
             ["@sapphire/framework", "npm:4.2.2"],\
-            ["@sapphire/pieces", "npm:3.6.0"],\
+            ["@sapphire/pieces", "npm:3.6.1"],\
             ["@sapphire/plugin-hmr", "npm:2.0.0"],\
             ["@sapphire/plugin-logger", "npm:3.0.1"],\
             ["@sapphire/plugin-pattern-commands", "npm:5.0.0"],\
@@ -49,9 +49,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash", "npm:4.17.21"],\
             ["pretty-ms", "npm:8.0.0"],\
             ["qrcode-terminal", "npm:0.12.0"],\
+            ["short-unique-id", "npm:4.4.4"],\
             ["shoukaku", "npm:3.3.1"],\
             ["topgg-autoposter", "npm:2.0.1"],\
-            ["whatsapp-web.js", "npm:1.19.4"]\
+            ["whatsapp-web.js", "npm:1.19.5"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -1348,6 +1349,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@discordjs/collection", "npm:1.3.0"],\
             ["@sapphire/utilities", "npm:3.11.0"],\
             ["tslib", "npm:2.4.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.6.1", {\
+          "packageLocation": "./.yarn/cache/@sapphire-pieces-npm-3.6.1-fb4736244a-df4a19dc71.zip/node_modules/@sapphire/pieces/",\
+          "packageDependencies": [\
+            ["@sapphire/pieces", "npm:3.6.1"],\
+            ["@discordjs/collection", "npm:1.4.0"],\
+            ["@sapphire/utilities", "npm:3.11.0"],\
+            ["tslib", "npm:2.5.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3129,7 +3140,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@keyv/mongo", "npm:2.1.8"],\
             ["@sapphire/discord.js-utilities", "npm:6.0.4"],\
             ["@sapphire/framework", "npm:4.2.2"],\
-            ["@sapphire/pieces", "npm:3.6.0"],\
+            ["@sapphire/pieces", "npm:3.6.1"],\
             ["@sapphire/plugin-hmr", "npm:2.0.0"],\
             ["@sapphire/plugin-logger", "npm:3.0.1"],\
             ["@sapphire/plugin-pattern-commands", "npm:5.0.0"],\
@@ -3146,9 +3157,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash", "npm:4.17.21"],\
             ["pretty-ms", "npm:8.0.0"],\
             ["qrcode-terminal", "npm:0.12.0"],\
+            ["short-unique-id", "npm:4.4.4"],\
             ["shoukaku", "npm:3.3.1"],\
             ["topgg-autoposter", "npm:2.0.1"],\
-            ["whatsapp-web.js", "npm:1.19.4"]\
+            ["whatsapp-web.js", "npm:1.19.5"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -4187,6 +4199,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["short-unique-id", [\
+        ["npm:4.4.4", {\
+          "packageLocation": "./.yarn/cache/short-unique-id-npm-4.4.4-472203d404-3507f2e973.zip/node_modules/short-unique-id/",\
+          "packageDependencies": [\
+            ["short-unique-id", "npm:4.4.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["shoukaku", [\
         ["npm:3.3.1", {\
           "packageLocation": "./.yarn/cache/shoukaku-npm-3.3.1-92f1f2efba-384bc82ad8.zip/node_modules/shoukaku/",\
@@ -4667,10 +4688,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["whatsapp-web.js", [\
-        ["npm:1.19.4", {\
-          "packageLocation": "./.yarn/cache/whatsapp-web.js-npm-1.19.4-58cd83a84b-17f0d80558.zip/node_modules/whatsapp-web.js/",\
+        ["npm:1.19.5", {\
+          "packageLocation": "./.yarn/cache/whatsapp-web.js-npm-1.19.5-3fc6df7d75-588d17e60e.zip/node_modules/whatsapp-web.js/",\
           "packageDependencies": [\
-            ["whatsapp-web.js", "npm:1.19.4"],\
+            ["whatsapp-web.js", "npm:1.19.5"],\
             ["@pedroslopez/moduleraid", "npm:5.0.2"],\
             ["archiver", "npm:5.3.1"],\
             ["fluent-ffmpeg", "npm:2.1.2"],\

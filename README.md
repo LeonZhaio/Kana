@@ -1,8 +1,10 @@
 ![Banner](assets/kana-banner.png)
 
 ### Features
+- **Playlists:** Kana has an inbuilt playlist system, that allows you to add tracks and play directly from them. No external URLs needed.  
+- **Feature-rich:** Kana supports playing URLs from *many* platforms and websites, and allows searching for specific tracks from **7 platforms**.  
 - **WhatsApp:** Most commands that Kana currently has can be run in WhatsApp, as well as Discord, after doing a simple one-time linking of both accounts. In a League of Legends (ranked) game and don't want to tab out? Just use your phone to WhatsApp the command to Kana! (an absolutely true and real example from past experiences)  
-- **Clean:** There are absolutely no premium subscriptions, which also means no advertisements for them in footers or images of embeds. We also try not to overwhelm the user with information every time a command is executed.  
+- **Clean:** There are absolutely no premium subscriptions, which also means no advertisements for them in footers or images of embeds.  
 - **Modern:** Uses the latest version of discord.js and the Sapphire framework, and uses Discord's slash commands, even having autocomplete.  
 - **Free:** Kana is, and always will be, completely free to use. No vote-locked commands, no paywalls, no advertisements.  
 - **Reliable:** Minimal downtime. (except during major updates)  
@@ -12,9 +14,6 @@
 - [Invite](https://kana.tkkr.one/invite)
 - [Source Code](https://kana.tkkr.one/github)
 - [Community/Support](https://kana.tkkr.one/discord)
-
-### Note
-*Take note that v4 has no **breaking changes** from v3.*
 
 ### License
 ```
@@ -34,7 +33,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ```
-
-<p align="center">
-<i><b>Kana is a continuation of Kohana.</i></b>
-</p>  
