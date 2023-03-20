@@ -321,11 +321,14 @@ export class PlaylistCommand extends Subcommand {
         const pm = new PaginatedMessage();
         let motd = this.container.motd;
         if (!Object(motd) || !motd.enabled || motd?.text?.length <= 0) motd = { enabled: false };
+        let totalDuration = 0;
+        for (const track of tracks) totalDuration += track.info.length;
+        if (tracks.find(track => track.isStream == true)) totalDuration = '∞';
         if (chunked.length == 0) {
             pm.addPageEmbed((embed) => {
                 embed
                     .setAuthor({ name: `${playlist.info.name}`, iconURL: playlist.info.iconURL || undefined })
-                    .setDescription(`**ID:** \`${playlist.info.id}\`\n**Description:** ${playlist.info.description}\n**Owner:** <@${playlist.info.owner}>\n**Private:** ${playlist.info.private ? 'Yes' : 'No'}\n\n**__Tracks:__**\n*No tracks in playlist.*`)
+                    .setDescription(`**ID:** \`${playlist.info.id}\`\n**Description:** ${playlist.info.description}\n**Owner:** <@${playlist.info.owner}>\n**Private:** ${playlist.info.private ? 'Yes' : 'No'}\n**Total duration:** ${prettyms(totalDuration, { colonNotation: true, secondsDecimalDigits: 0, millisecondsDecimalDigits: 0 })}\n\n**__Tracks:__**\n*No tracks in playlist.*`)
                     .setColor('#cba6f7')
                     .setFooter(this.container.config.footer);
                 if (motd.enabled && motd.image) embed.setImage(motd.image);
@@ -342,7 +345,7 @@ export class PlaylistCommand extends Subcommand {
             pm.addPageEmbed((embed) => {
                 embed
                     .setAuthor({ name: `${playlist.info.name}`, iconURL: playlist.info.iconURL || undefined })
-                    .setDescription(`**ID:** \`${playlist.info.id}\`\n**Description:** ${playlist.info.description}\n**Owner:** <@${playlist.info.owner}>\n**Private:** ${playlist.private ? 'Yes' : 'No'}\n\n**__Tracks:__**\n` + descriptionLines.join('\n'))
+                    .setDescription(`**ID:** \`${playlist.info.id}\`\n**Description:** ${playlist.info.description}\n**Owner:** <@${playlist.info.owner}>\n**Private:** ${playlist.private ? 'Yes' : 'No'}\n**Total duration:** ${prettyms(totalDuration, { colonNotation: true, secondsDecimalDigits: 0, millisecondsDecimalDigits: 0 })}\n\n**__Tracks:__**\n` + descriptionLines.join('\n'))
                     .setColor('#cba6f7')
                     .setFooter(this.container.config.footer);
                 if (motd.enabled && motd.image) embed.setImage(motd.image);
@@ -408,7 +411,8 @@ export class PlaylistCommand extends Subcommand {
         if (!selectedPlaylist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')] });
         const dispatcher = this.container.queue.get(interaction.guildId);
         if (!dispatcher.current) return interaction.reply({ embeds: [this.container.util.embed('error', 'There\'s nothing playing right now.')] });
-        const clean = (_.cloneDeep(dispatcher.current)).info.requester = undefined;
+        let clean = _.cloneDeep(dispatcher.current)
+        clean.info.requester = undefined;
         playlists[selectedPlaylist.info.id].tracks.push(clean);
         await this.container.db.set('playlists', playlists);
         return interaction.reply({ embeds: [this.container.util.embed('success', `Added **${dispatcher.current.info.title}** - **${dispatcher.current.info.author}** to **${selectedPlaylist.info.name}**.`)] });
