@@ -411,7 +411,7 @@ export class PlaylistCommand extends Subcommand {
         if (!selectedPlaylist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')] });
         const dispatcher = this.container.queue.get(interaction.guildId);
         if (!dispatcher.current) return interaction.reply({ embeds: [this.container.util.embed('error', 'There\'s nothing playing right now.')] });
-        let clean = _.cloneDeep(dispatcher.current)
+        let clean = _.cloneDeep(dispatcher.current);
         clean.info.requester = undefined;
         playlists[selectedPlaylist.info.id].tracks.push(clean);
         await this.container.db.set('playlists', playlists);
