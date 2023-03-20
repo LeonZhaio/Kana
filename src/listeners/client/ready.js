@@ -64,5 +64,33 @@ export class ReadyListener extends Listener {
         setInterval(async () => {
             this.container.presenceUpdateRequired = true;
         }, this.container.config.activityRotateDelay * 1000);
+
+        setInterval(async () => {
+            const stats = await this.container.db.get('stats');
+            if (!stats) {
+                this.container.db.set('stats', {
+                    tracksPlayed: this.container.tracksPlayed,
+                    totalTracksPlayed: this.container.totalTracksPlayed,
+                    totalDuration: this.container.totalTrackDuration,
+                    totalCommandsInvoked: this.container.totalCommandsInvoked, 
+                    totalUptime: process.uptime()
+                });
+            } else {
+                this.container.db.set('stats', { 
+                    tracksPlayed: [...stats.tracksPlayed, ...this.container.tracksPlayed], // List of tracks played by the bot ({ identifier, source, title, author })
+                    totalTracksPlayed: this.container.totalTracksPlayed + stats.totalTracksPlayed, // Total number of tracks played by the bot
+                    totalDuration: this.container.totalTrackDuration + stats.totalDuration, // Total duration of all tracks played by the bot (not including streams of course) in milliseconds
+                    totalCommandsInvoked: this.container.totalCommandsInvoked + stats.totalCommandsInvoked, // Total number of commands invoked by users
+                    totalUptime: process.uptime() + stats.totalUptime // Total uptime of the bot in seconds
+                });
+            }
+            this.container.tracksPlayed = [];
+            this.container.tracksPlayed = 0;
+            this.container.totalTracksPlayed = 0;
+            this.container.totalDuration = 0;
+            this.container.totalCommandsInvoked = 0;
+            this.container.totalUptime = 0;
+            this.container.logger.debug('Stats updated.');
+        }, 300000);
     }
 }
