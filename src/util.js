@@ -75,11 +75,16 @@ export class Queue extends Map {
         if (!existing) {
             if (container.shoukaku.players.has(guild.id)) 
                 return 'Busy';
-            const player = await node.joinChannel({
-                guildId: guild.id,
-                shardId: guild.shardId,
-                channelId: member.voice.channelId
-            });
+            let player;
+            try {
+                player = await node.joinChannel({
+                    guildId: guild.id,
+                    shardId: guild.shardId,
+                    channelId: member.voice.channelId
+                });
+            } catch (e) {
+                return 'Join Fail';
+            }
             container.logger.debug(`New connection @ guild "${guild.id}"`);
             const dispatcher = new Dispatcher({
                 client: this.client,
