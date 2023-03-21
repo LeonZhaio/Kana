@@ -83,6 +83,7 @@ export class Queue extends Map {
                     channelId: member.voice.channelId
                 });
             } catch (e) {
+                channel.send({ embeds: [container.util.embed('error', 'Failed to establish a connection to your voice channel within 15 seconds. Please check that you have given Kana the correct permissions.')] });
                 return 'Join Fail';
             }
             container.logger.debug(`New connection @ guild "${guild.id}"`);
