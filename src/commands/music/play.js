@@ -77,6 +77,8 @@ export class PlayCommand extends Command {
         const source = interaction.options.getString('source') || 'ytmsearch';
         const next = interaction.options.getBoolean('next') || false;
         const node = this.container.shoukaku.getNode();
+        if (!interaction.member.voice.channel.joinable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to join <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
+        if (!interaction.member.voice.channel.speakable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to play audio in <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
         if (PlayCommand.checkURL(query)) {
             let result = await node.rest.resolve(query); 
             if (!result?.tracks.length) result = await node.rest.resolve(query); // Retry
@@ -106,6 +108,8 @@ export class PlayCommand extends Command {
         const node = this.container.shoukaku.getNode();
         let query = interaction.targetMessage.content;
         if (!query) return interaction.reply({ embeds: [this.container.util.embed('error', 'The message you selected has no content.')], ephemeral: true });
+        if (!interaction.member.voice.channel.joinable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to join <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
+        if (!interaction.member.voice.channel.speakable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to play audio in <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
         if (PlayCommand.extractURL(query)) {
             let result = await node.rest.resolve(PlayCommand.extractURL(query)[0]);
             if (!result?.tracks.length) result = await node.rest.resolve(PlayCommand.extractURL(query)[0]);
@@ -228,6 +232,8 @@ export class PlayCommand extends Command {
         if (!voiceChannels.length) return msg.reply('You are not in a voice channel.');
         if (voiceChannels.length > 1) return msg.reply(`You are in multiple voice channels. Using ${voiceChannels[0].name}.`);
         const voiceChannel = voiceChannels[0];
+        if (!voiceChannel.joinable) return msg.reply(`I don't have permission to join ${voiceChannel.name}.`);
+        if (!voiceChannel.speakable) return msg.reply(`I don't have permission to play audio in ${voiceChannel.name}.`);
         const member = voiceChannel.members.find((member) => member.id === discordUser.id);
         if (PlayCommand.checkURL(query)) {
             let result = await node.rest.resolve(query); 
