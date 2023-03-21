@@ -1,6 +1,6 @@
 import { AllFlowsPrecondition } from '@sapphire/framework';
 
-export class MaintenanceModePrecondition extends AllFlowsPrecondition {
+export class GlobalPrecondition extends AllFlowsPrecondition {
     constructor(context, options) {
         super(context, {
             ...options,
@@ -9,15 +9,16 @@ export class MaintenanceModePrecondition extends AllFlowsPrecondition {
     }
 
     chatInputRun(interaction) {
-        return this.maintenanceCheck(interaction.user.id);
+        return this.check(interaction.user.id, interaction);
     }
 
     contextMenuRun(interaction) {
-        return this.maintenanceCheck(interaction.user.id);
+        return this.check(interaction.user.id, interaction);
     }
 
-    async maintenanceCheck(u) {
+    async check(u, i) {
         this.container.totalCommandsInvoked++;
+        if (!i.channel.viewable) return this.error({ message: 'I don\'t have permissions to view the channel you\'re executing this command in. Ensure Kana has permissions to send and view messages in this channel before continuing.' });
         let maintenance = await this.container.db.get('maintenance');
         if (!maintenance) maintenance = false;
         if (maintenance == true && !this.container.config.ownerIds.includes(u)) return this.error({ message: 'Kana is currently in maintenance mode. Please try again later.' });
