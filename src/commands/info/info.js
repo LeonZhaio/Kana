@@ -42,24 +42,28 @@ export class InfoCommand extends Command {
             .setColor('#cba6f7')
             .addFields([
                 {
+                    name: 'Platform support:',
+                    value: 'Kana supports dozens of platforms, including via direct search and link resolving.'
+                },
+                {
+                    name: 'Playlists:',
+                    value: 'Kana has an in-built playlist system that allows users to create playlists, add tracks and share playlists with other Kana users. No external URLs needed, all done through Discord.'
+                },
+                {
                     name: 'Free:',
                     value: 'Kana is, and always will be, completely free to use. No vote-locked commands, no paywalls, and no advertisements.'
                 },
                 {
-                    name: 'Clean:',
-                    value: 'Kana has a simple and clean interface, with no clutter or really unnecessary commands or information put into embeds.'
-                },
-                {
-                    name: 'Modern:',
-                    value: 'Kana uses the latest Discord features, implementing slash commands and autocomplete (for the play command), with the latest Lavalink features too.'
+                    name: 'Clean and modern:',
+                    value: 'No premium subscriptions, and no advertisements in Kana\'s responses. Uses the latest Discord features, such as context menus, autocomplete, and slash commands / subcommands.'
                 },
                 {
                     name: 'Reliable:',
-                    value: 'Kana has a 99.9% uptime, with no huge disruptions most of the time. The only downtime that users may face is during major feature updates.'
+                    value: 'New features are tested before release on a seperate instance and Kana has minimal maintenance and downtime.'
                 },
                 {
                     name: 'Open Source:',
-                    value: 'Kana is open source, meaning that anyone can contribute to the project, and see how the bot works through our [GitHub](https://github.com/thaddeuskkr/Kana).'
+                    value: 'Kana is fully open-source, allowing developers to contribute towards new features and improvements. Want to help out? Check out the [GitHub](https://github.com/thaddeuskkr/Kana)!'
                 },
                 {
                     name: 'WhatsApp:',
