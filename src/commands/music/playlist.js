@@ -216,7 +216,7 @@ export class PlaylistCommand extends Subcommand {
         const name = interaction.options.getString('name');
         const description = interaction.options.getString('description');
         let iconURL = interaction.options.getString('icon-url');
-        if (name.length > 100) return interaction.reply({ embeds: [this.container.util.embed('error', 'The playlist name can\'t be longer than 100 characters.')] });
+        if (name.length > 100) return interaction.reply({ embeds: [this.container.util.embed('error', 'The playlist name can\'t be longer than 100 characters.')], ephemeral: true });
         if (
             iconURL && ((
                 !iconURL.endsWith('.png') &&
@@ -225,11 +225,11 @@ export class PlaylistCommand extends Subcommand {
                 !iconURL.endsWith('.gif')
             ) || !PlaylistCommand.isValidUrl(iconURL))
         ) {
-            return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid icon URL. Accepts links with extension `.png`, `.jpg`, `.jpeg`, `.gif`.')] });
+            return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid icon URL. Accepts links with extension `.png`, `.jpg`, `.jpeg`, `.gif`.')], ephemeral: true });
         }
         let newId = generate();
         while (Object.values(playlists).find(playlist => playlist.info.id === newId)) newId = generate();
-        if (Object.values(playlists).find(playlist => playlist.info.name.toLowerCase() === name.toLowerCase() && playlist.info.owner === interaction.user.id)) return interaction.reply({ embeds: [this.container.util.embed('error', 'A playlist with that name already exists.')] });
+        if (Object.values(playlists).find(playlist => playlist.info.name.toLowerCase() === name.toLowerCase() && playlist.info.owner === interaction.user.id)) return interaction.reply({ embeds: [this.container.util.embed('error', 'A playlist with that name already exists.')], ephemeral: true });
         const newPlaylist = {
             info: {
                 id: newId,
@@ -243,19 +243,19 @@ export class PlaylistCommand extends Subcommand {
         };
         playlists[newId] = newPlaylist;
         await this.container.db.set('playlists', playlists);
-        return interaction.reply({ embeds: [this.container.util.embed('success', `Created playlist **${newPlaylist.info.name}** (\`${newId}\`).`)] });
+        return interaction.reply({ embeds: [this.container.util.embed('success', `Created playlist **${newPlaylist.info.name}** (\`${newId}\`).`)], ephemeral: true });
     }
 
     async playlistDelete(interaction) {
         let playlists = await this.container.db.get('playlists');
         const id = interaction.options.getString('id');
-        if (id.length !== 12) return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid playlist ID.')] });
+        if (id.length !== 12) return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid playlist ID.')], ephemeral: true });
         const playlist = Object.values(playlists).find(playlist => playlist.info.id === id);
-        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')] });
-        if (playlist.info.owner !== interaction.user.id) return interaction.reply({ embeds: [this.container.util.embed('error', 'You don\'t own that playlist.')] });
+        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')], ephemeral: true });
+        if (playlist.info.owner !== interaction.user.id) return interaction.reply({ embeds: [this.container.util.embed('error', 'You don\'t own that playlist.')], ephemeral: true });
         delete playlists[playlist.info.id];
         await this.container.db.set('playlists', playlists);
-        return interaction.reply({ embeds: [this.container.util.embed('success', `Deleted playlist **${playlist.info.name}** (\`${playlist.info.id}\`).`)] });
+        return interaction.reply({ embeds: [this.container.util.embed('success', `Deleted playlist **${playlist.info.name}** (\`${playlist.info.id}\`).`)], ephemeral: true });
     }
 
     async playlistEdit(interaction) {
@@ -265,15 +265,15 @@ export class PlaylistCommand extends Subcommand {
         const id = interaction.options.getString('id');
         const userPlaylists = Object.values(playlists).filter(playlist => playlist.info.owner === interaction.user.id);
         const playlist = Object.values(userPlaylists).find(playlist => playlist.info.name.toLowerCase() === id.toLowerCase() || playlist.info.id === id);
-        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')] });
-        if (playlist.info.owner !== interaction.user.id) return interaction.reply({ embeds: [this.container.util.embed('error', 'You don\'t own that playlist.')] });
+        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')], ephemeral: true });
+        if (playlist.info.owner !== interaction.user.id) return interaction.reply({ embeds: [this.container.util.embed('error', 'You don\'t own that playlist.')], ephemeral: true });
         // Checking inputs
         switch(field) {
         case 'name':
-            if (value.length > 128) return interaction.reply({ embeds: [this.container.util.embed('error', 'The playlist name can\'t be longer than 128 characters.')] });
+            if (value.length > 128) return interaction.reply({ embeds: [this.container.util.embed('error', 'The playlist name can\'t be longer than 128 characters.')], ephemeral: true });
             break;
         case 'description':
-            if (value.length > 1024) return interaction.reply({ embeds: [this.container.util.embed('error', 'The playlist description can\'t be longer than 1024 characters.')] });
+            if (value.length > 1024) return interaction.reply({ embeds: [this.container.util.embed('error', 'The playlist description can\'t be longer than 1024 characters.')], ephemeral: true });
             break;
         case 'icon':
             if (
@@ -284,7 +284,7 @@ export class PlaylistCommand extends Subcommand {
                     !value.endsWith('.gif')
                 ) || !PlaylistCommand.isValidUrl(value))
             ) {
-                return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid icon URL. Accepts links with extension `.png`, `.jpg`, `.jpeg`, `.gif`.')] });
+                return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid icon URL. Accepts links with extension `.png`, `.jpg`, `.jpeg`, `.gif`.')], ephemeral: true });
             }
             break;
         case 'private':
@@ -294,7 +294,7 @@ export class PlaylistCommand extends Subcommand {
                 value.toLowerCase() !== 'yes' &&
                 value.toLowerCase() !== 'no'
             ) {
-                return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid value. Accepts `true`, `false`, `yes`, `no`.')] });
+                return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid value. Accepts `true`, `false`, `yes`, `no`.')], ephemeral: true });
             }
             if (value.toLowerCase() == 'true') value = true;
             else if (value.toLowerCase() == 'false') value = false;
@@ -302,11 +302,11 @@ export class PlaylistCommand extends Subcommand {
             else if (value.toLowerCase() == 'no') value = false;
             break;
         default:
-            return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid field.')] });
+            return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid field.')], ephemeral: true });
         }
         playlists[playlist.info.id].info[field] = value;
         await this.container.db.set('playlists', playlists);
-        return interaction.reply({ embeds: [this.container.util.embed('success', `Successfully changed **${field}** to **${value}**.`)] });
+        return interaction.reply({ embeds: [this.container.util.embed('success', `Successfully changed **${field}** to **${value}**.`)], ephemeral: true });
     }
 
     async playlistInfo(interaction) {
@@ -315,7 +315,7 @@ export class PlaylistCommand extends Subcommand {
         const publicPlaylists = Object.values(playlists).filter(playlist => playlist.info.private === false);
         const userPlaylists = Object.values(playlists).filter(playlist => playlist.info.owner === interaction.user.id);
         const playlist = userPlaylists.find(playlist => playlist.info.name.toLowerCase() === id.toLowerCase() || playlist.info.id === id)  || publicPlaylists.find(playlist => playlist.info.name.toLowerCase() === id.toLowerCase() || playlist.info.id === id);
-        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'Failed to find a playlist using that search term.')] });
+        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'Failed to find a playlist using that search term.')], ephemeral: true });
         const tracks = playlist.tracks;
         const chunked = _.chunk(tracks, this.container.config.tracksPerPage || 15);
         const pm = new PaginatedMessage();
@@ -369,7 +369,7 @@ export class PlaylistCommand extends Subcommand {
             embed.setFooter({ text: motd.text, iconURL: motd.icon || undefined });
             if (motd.thumbnail.length > 0) embed.setThumbnail(motd.thumbnail || undefined);
         }
-        return interaction.reply({ embeds: [embed] });
+        return interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     async playlistAdd(interaction) {
@@ -379,8 +379,8 @@ export class PlaylistCommand extends Subcommand {
         const id = interaction.options.getString('id');
         const userPlaylists = Object.values(playlists).filter(playlist => playlist.info.owner === interaction.user.id);
         const playlist = Object.values(userPlaylists).find(playlist => playlist.info.name.toLowerCase() === id.toLowerCase() || playlist.info.id === id);
-        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')] });
-        if (playlist.info.owner !== interaction.user.id) return interaction.reply({ embeds: [this.container.util.embed('error', 'You don\'t own that playlist.')] });
+        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')], ephemeral: true });
+        if (playlist.info.owner !== interaction.user.id) return interaction.reply({ embeds: [this.container.util.embed('error', 'You don\'t own that playlist.')], ephemeral: true });
         const node = this.container.shoukaku.getNode();
         if (PlaylistCommand.isValidUrl(query)) {
             let result = await node.rest.resolve(query); 
@@ -408,9 +408,9 @@ export class PlaylistCommand extends Subcommand {
         const playlists = await this.container.db.get('playlists');
         const userPlaylists = Object.values(playlists).filter(playlist => playlist.info.owner === interaction.user.id);
         const selectedPlaylist = userPlaylists.find(playlist => playlist.info.name.toLowerCase() === id.toLowerCase() || playlist.info.id === id);
-        if (!selectedPlaylist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')] });
+        if (!selectedPlaylist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')], ephemeral: true });
         const dispatcher = this.container.queue.get(interaction.guildId);
-        if (!dispatcher.current) return interaction.reply({ embeds: [this.container.util.embed('error', 'There\'s nothing playing right now.')] });
+        if (!dispatcher.current) return interaction.reply({ embeds: [this.container.util.embed('error', 'There\'s nothing playing right now.')], ephemeral: true });
         let clean = _.cloneDeep(dispatcher.current);
         clean.info.requester = undefined;
         playlists[selectedPlaylist.info.id].tracks.push(clean);
@@ -423,13 +423,13 @@ export class PlaylistCommand extends Subcommand {
         const id = interaction.options.getString('id');
         const index = interaction.options.getInteger('index');
         const playlist = Object.values(playlists).find(playlist => (playlist.info.id === id || playlist.info.name.toLowerCase() === id.toLowerCase()) && (playlist.info.private === false || playlist.info.owner === interaction.user.id));
-        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')] });
-        if (playlist.info.owner !== interaction.user.id) return interaction.reply({ embeds: [this.container.util.embed('error', 'You don\'t own that playlist.')] });
-        if (index > playlist.tracks.length || index < 1) return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid track index.')] });
+        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')], ephemeral: true });
+        if (playlist.info.owner !== interaction.user.id) return interaction.reply({ embeds: [this.container.util.embed('error', 'You don\'t own that playlist.')], ephemeral: true });
+        if (index > playlist.tracks.length || index < 1) return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid track index.')], ephemeral: true });
         const track = playlist.tracks[index - 1];
         playlist.tracks.splice(index - 1, 1);
         await this.container.db.set('playlists', playlists);
-        return interaction.reply({ embeds: [this.container.util.embed('success', `Removed **${track.info.title}** - **${track.info.author}** from **${playlist.info.name}**.`)] });
+        return interaction.reply({ embeds: [this.container.util.embed('success', `Removed **${track.info.title}** - **${track.info.author}** from **${playlist.info.name}**.`)], ephemeral: true });
     }
 
     async playlistLoad(interaction) {
@@ -439,8 +439,10 @@ export class PlaylistCommand extends Subcommand {
         const publicPlaylists = Object.values(playlists).filter(playlist => playlist.info.private === false);
         const userPlaylists = Object.values(playlists).filter(playlist => playlist.info.owner === interaction.user.id);
         const selectedPlaylist = userPlaylists.find(playlist => playlist.info.name.toLowerCase() === id.toLowerCase() || playlist.info.id === id)  || publicPlaylists.find(playlist => playlist.info.name.toLowerCase() === id.toLowerCase() || playlist.info.id === id);
-        if (!selectedPlaylist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')] });
-        if (interaction.guild.members.me.voice.channelId !== null && this.container.queue.get(interaction.guildId)?.current && interaction.member.voice.channel.id === interaction.guild.members.me.voice.channel.id) return interaction.reply({ embeds: [this.container.util.embed('error', `Join <#${interaction.guild.members.me.voice.channel.id}> before executing this command.`)] });
+        if (!selectedPlaylist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')], ephemeral: true });
+        if (interaction.guild.members.me.voice.channelId !== null && this.container.queue.get(interaction.guildId)?.current && interaction.member.voice.channel.id === interaction.guild.members.me.voice.channel.id) return interaction.reply({ embeds: [this.container.util.embed('error', `Join <#${interaction.guild.members.me.voice.channel.id}> before executing this command.`)], ephemeral: true });
+        if (!interaction.member.voice.channel.joinable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to join <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
+        if (!interaction.member.voice.channel.speakable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to play audio in <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
         for (const track of selectedPlaylist.tracks) await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track);
         return interaction.reply({ embeds: [this.container.util.embed('success', `Queued **${selectedPlaylist.tracks.length} tracks** from **${selectedPlaylist.info.name}**.`)] });
     }
