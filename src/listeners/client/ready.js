@@ -52,6 +52,10 @@ export class ReadyListener extends Listener {
             }
             if (!maintenance && !motd.enabled && this.container.presenceUpdateRequired) {
                 const activity = this.container.config.activities[this.container.statusRotatorCurrent];
+                activity.name = activity.name
+                    .replace('{version}', this.container.client.version)
+                    .replace('{serverCount}', this.container.client.guilds.cache.size)
+                    .replace('{userCount}', this.container.client.users.cache.size);
                 if (client.user.presence.activities.name !== activity.name) {
                     client.user.setPresence({ activities: [activity], status: activity.status });
                     this.container.logger.debug('Presence updated.');
