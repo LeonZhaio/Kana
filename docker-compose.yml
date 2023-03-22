@@ -2,14 +2,11 @@ version: '3.9'
 services:
   kana:
     container_name: kana
-    image: thadkkr/kana:latest
+    build: .
     restart: on-failure
     environment:
       - NODE_ENV="production"
     env_file: 
       - .env
     volumes:
-      # Configuration
-      - ./config.js:/kana/src/config.js
-      # Whatsapp authentication
-      - ./.wwebjs_auth:/kana/.wwebjs_auth
+      - .:/kana
