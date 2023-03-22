@@ -1,5 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import { ActivityType } from 'discord.js';
+import axios from 'axios';
 
 export class ReadyListener extends Listener {
     constructor(context, options) {
@@ -69,6 +70,7 @@ export class ReadyListener extends Listener {
             this.container.presenceUpdateRequired = true;
         }, this.container.config.activityRotateDelay * 1000);
 
+        // Updating stats in database
         setInterval(async () => {
             const stats = await this.container.db.get('stats');
             if (!stats) {
@@ -95,5 +97,34 @@ export class ReadyListener extends Listener {
             this.container.totalUptime = 0;
             this.container.logger.debug('Stats updated.');
         }, 300000);
+
+        // Posting stats to different bot lists (every 15 minutes)
+        setInterval(async () => {
+            const serverCount = this.container.client.guilds.cache.size;
+            const discordsRes = await axios({
+                url: `https://discords.com/bots/api/bot/${this.container.client.user.id}`,
+                method: 'post',
+                data: { 
+                    server_count: serverCount 
+                },
+                headers: {
+                    Authorization: this.container.config.discordsToken
+                }  
+            });
+            if (discordsRes.status === 200) this.container.logger.debug('Stats posted to discords.com.');
+            else this.container.logger.error(`Error while posting stats to discords.com: ${discordsRes.data}`);
+            const botsggRes = await axios({
+                url: `https://discord.bots.gg/api/v1/bots/${this.container.client.user.id}/stats`,
+                method: 'post',
+                data: {
+                    guildCount: serverCount
+                },
+                headers: {
+                    Authorization: this.container.config.botsggToken
+                }
+            });
+            if (botsggRes.status === 200) this.container.logger.debug('Stats posted to discord.bots.gg.');
+            else this.container.logger.error(`Error while posting stats to discord.bots.gg: ${botsggRes.data}`);
+        }, 900000);
     }
 }
