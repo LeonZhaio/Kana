@@ -73,7 +73,7 @@ export class ReadyListener extends Listener {
                     totalTracksPlayed: this.container.totalTracksPlayed,
                     totalDuration: this.container.totalTrackDuration,
                     totalCommandsInvoked: this.container.totalCommandsInvoked, 
-                    totalUptime: process.uptime()
+                    totalUptime: this.container.totalUptime
                 });
             } else {
                 this.container.db.set('stats', { 
