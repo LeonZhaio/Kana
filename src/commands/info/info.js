@@ -31,19 +31,20 @@ export class InfoCommand extends Command {
             totalTracksPlayed: container.totalTracksPlayed + stats.totalTracksPlayed, // Total number of tracks played by the bot
             totalDuration: container.totalTrackDuration + stats.totalDuration, // Total duration of all tracks played by the bot (not including streams of course) in milliseconds
             totalCommandsInvoked: container.totalCommandsInvoked + stats.totalCommandsInvoked, // Total number of commands invoked by users
-            totalUptime: process.uptime() + stats.totalUptime // Total uptime of the bot in seconds
+            totalUptime: container.totalUptime + stats.totalUptime // Total uptime of the bot in seconds
         };
         const embed1 = new EmbedBuilder()
             .setTitle('About Kana')
+            .setThumbnail(this.container.client.user.displayAvatarURL({ size: 4096 }))
             .setDescription(
                 'Kana is a free music Discord bot with WhatsApp integrations, made using [node.js](https://nodejs.org/) and [discord.js](https://discord.js.org/), powered by [Lavalink](https://github.com/freyacodes/Lavalink) and the [Sapphire Framework](https://sapphirejs.dev). Kana aims to provide music at the highest quality possible, fully free of charge, through a simple to use interface and command list.\n' +
-                `**[Invite](https://kana.tkkr.one/invite)** | **[GitHub](https://kana.tkkr.one/github)** | **[Vote](https://kana.tkkr.one/vote)** on **[top.gg](https://kana.tkkr.one/dbl)** | **[Support](https://kana.tkkr.one/discord)** | Currently on **v${this.container.client.version}**`
+                `**[Invite](https://discord.com/oauth2/authorize?client_id=${this.container.client.user.id}&permissions=279176399936&scope=bot%20applications.commands)** | **[GitHub](https://github.com/thaddeuskkr/Kana)** | **[Vote](https://top.gg/bot/${this.container.client.user.id}/vote)** on **[top.gg](https://top.gg/bot/${this.container.client.user.id})** | **[Support](https://discord.gg/w9MjahmXYv)** | Currently on **v${this.container.client.version}**`
             )
             .setColor('#cba6f7')
             .addFields([
                 {
                     name: 'Platform support:',
-                    value: 'Kana supports dozens of platforms, including via direct search and link resolving.'
+                    value: 'Kana supports dozens of platforms, including via direct search and link resolving. Supported platforms include YouTube Music, YouTube, Spotify, Apple Music and much more!'
                 },
                 {
                     name: 'Playlists:',
@@ -59,7 +60,7 @@ export class InfoCommand extends Command {
                 },
                 {
                     name: 'Reliable:',
-                    value: 'New features are tested before release on a seperate instance and Kana has minimal maintenance and downtime.'
+                    value: 'New features are tested before release on a seperate instance and Kana has minimal downtime.'
                 },
                 {
                     name: 'Open Source:',
@@ -108,11 +109,13 @@ export class InfoCommand extends Command {
                 },
                 {
                     name: 'Total play time:',
-                    value: ms(stats.totalDuration, { verbose: true })
+                    value: ms(stats.totalDuration, { secondsDecimalDigits: 0 }),
+                    inline: true
                 },
                 {
                     name: 'Total uptime:',
-                    value: ms(stats.totalUptime * 1000, { verbose: true })
+                    value: ms(stats.totalUptime * 1000, { secondsDecimalDigits: 0 }),
+                    inline: true
                 }
             ]);
         return interaction.editReply({ embeds: [embed1, embed2] });
