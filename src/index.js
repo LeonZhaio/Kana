@@ -76,6 +76,7 @@ container.tracksPlayed = [];
 container.totalTracksPlayed = 0;
 container.totalCommandsInvoked = 0;
 container.totalTrackDuration = 0;
+container.totalUptime = 0;
 container.runtimeArguments = process.argv.slice(2);
 container.whatsapp = whatsapp;
 container.config = config;
@@ -88,6 +89,11 @@ container.shoukaku = new Shoukaku(new Connectors.DiscordJS(client), config.laval
     userAgent: `Kana-${version}`,
     reconnectTries: 10
 });
+
+setInterval(async () => {
+    container.totalUptime += 1;
+}, 1000);
+
 
 process.on('unhandledRejection', (error) => {
     container.logger.error(error);
