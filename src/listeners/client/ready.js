@@ -81,12 +81,12 @@ export class ReadyListener extends Listener {
                     totalTracksPlayed: this.container.totalTracksPlayed + stats.totalTracksPlayed, // Total number of tracks played by the bot
                     totalDuration: this.container.totalTrackDuration + stats.totalDuration, // Total duration of all tracks played by the bot (not including streams of course) in milliseconds
                     totalCommandsInvoked: this.container.totalCommandsInvoked + stats.totalCommandsInvoked, // Total number of commands invoked by users
-                    totalUptime: process.uptime() + stats.totalUptime // Total uptime of the bot in seconds
+                    totalUptime: this.container.totalUptime + stats.totalUptime // Total uptime of the bot in seconds
                 });
             }
             this.container.tracksPlayed = [];
             this.container.totalTracksPlayed = 0;
-            this.container.totalDuration = 0;
+            this.container.totalTrackDuration = 0;
             this.container.totalCommandsInvoked = 0;
             this.container.totalUptime = 0;
             this.container.logger.debug('Stats updated.');
