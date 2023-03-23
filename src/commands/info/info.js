@@ -97,17 +97,17 @@ export class InfoCommand extends Command {
                     inline: true
                 },
                 {
-                    name: 'Total tracks played:',
+                    name: 'Tracks played:',
                     value: String(stats.totalTracksPlayed),
                     inline: true
                 },
                 {
-                    name: 'Total commands executed:',
+                    name: 'Commands executed:',
                     value: String(stats.totalCommandsInvoked),
                     inline: true
                 },
                 {
-                    name: 'Total play time:',
+                    name: 'Duration played:',
                     value: ms(stats.totalDuration, { secondsDecimalDigits: 0 }),
                     inline: true
                 },
