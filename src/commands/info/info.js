@@ -83,11 +83,6 @@ export class InfoCommand extends Command {
                     inline: true
                 },
                 {
-                    name: 'User count:',
-                    value: String(this.container.client.users.cache.size),
-                    inline: true
-                },
-                {
                     name: 'Uptime:',
                     value: ms(process.uptime() * 1000, { verbose: true }),
                     inline: true
