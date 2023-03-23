@@ -80,6 +80,7 @@ container.config = config;
 container.util = Util;
 container.queue = new Queue(client);
 container.webhook = new WebhookClient({ url: config.webhook });
+container.logWebhook = new WebhookClient({ url: config.logWebhook });
 container.db = new Keyv(config.databaseUrl, { collection: coll });
 if (config.topggToken) container.autoposter = AutoPoster(config.topggToken, client, { interval: 900000, postOnStart: true });
 container.shoukaku = new Shoukaku(new Connectors.DiscordJS(client), config.lavalink, {
@@ -94,6 +95,7 @@ setInterval(async () => {
 
 process.on('unhandledRejection', (error) => {
     container.logger.error(error);
+    container.logWebhook.send(`**__Unhandled rejection__**\n\`\`\`${error}\`\`\``);
 });
 
 if (!container.runtimeArguments.includes('--no-discord') && !container.runtimeArguments.includes('-nd')) client.login(config.discordToken);

@@ -10,5 +10,6 @@ export class ErrorListener extends Listener {
     }
     async run (error) {
         this.container.logger.error(error);
+        this.container.logWebhook.send(`**__Client error__**\n\`\`\`${error}\`\`\``);
     }
 }
