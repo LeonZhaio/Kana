@@ -39,14 +39,27 @@ import '@sapphire/plugin-subcommands/register';
 
 const client = new SapphireClient({
     intents: [
+        /* =========== Non-privileged Intents =========== */
+        // GatewayIntentBits.AutoModerationConfiguration,
+        // GatewayIntentBits.AutoModerationExecution,
         GatewayIntentBits.DirectMessageReactions,
-        GatewayIntentBits.DirectMessages,
+        // GatewayIntentBits.DirectMessageTyping,
+        // GatewayIntentBits.DirectMessages,
         GatewayIntentBits.GuildEmojisAndStickers,
-        GatewayIntentBits.GuildMessageReactions,
+        // GatewayIntentBits.GuildIntegrations,
+        // GatewayIntentBits.GuildInvites,
+        // GatewayIntentBits.GuildMessageReactions,
+        // GatewayIntentBits.GuildMessageTyping,
         GatewayIntentBits.GuildMessages,
+        // GatewayIntentBits.GuildModeration,
+        // GatewayIntentBits.GuildScheduledEvents,
         GatewayIntentBits.GuildVoiceStates,
+        // GatewayIntentBits.GuildWebhooks,
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.MessageContent
+        /* =========== Privileged Intents =========== */
+        // GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildMembers, // Used in user counts and to detect if there are users in a voice channel
+        // GatewayIntentBits.MessageContent
     ],
     logger: {
         level: String(process.env.NODE_ENV).toLowerCase() === 'development' ? LogLevel.Debug : LogLevel.Info
