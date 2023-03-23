@@ -2,6 +2,7 @@ version: '3.9'
 services:
   kana:
     container_name: kana
+    image: kana:latest
     build: .
     restart: on-failure
     environment:
@@ -13,6 +14,7 @@ services:
   lavalink:
     container_name: lavalink
     image: ghcr.io/freyacodes/lavalink:latest
+    restart: on-failure
     ports:
       - 2333:2333
     volumes:
