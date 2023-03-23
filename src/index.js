@@ -17,7 +17,7 @@
 */
 
 import { SapphireClient, LogLevel, container } from '@sapphire/framework';
-import { GatewayIntentBits, WebhookClient } from 'discord.js';
+import { GatewayIntentBits, WebhookClient, ActivityType } from 'discord.js';
 import { Shoukaku, Connectors } from 'shoukaku';
 import { createRequire } from 'module';
 import { AutoPoster } from 'topgg-autoposter';
@@ -51,7 +51,7 @@ const client = new SapphireClient({
     logger: {
         level: String(process.env.NODE_ENV).toLowerCase() === 'development' ? LogLevel.Debug : LogLevel.Info
     },
-    presence: { activities: [config.activities[0]], status: config.activities[0].status }
+    presence: { activities: [{ name: 'starting...', type: ActivityType.Playing }], status: 'dnd' }
 });
 
 const whatsapp = new Client({
