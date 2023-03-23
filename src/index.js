@@ -17,7 +17,7 @@
 */
 
 import { SapphireClient, LogLevel, container } from '@sapphire/framework';
-import { GatewayIntentBits, Partials, WebhookClient } from 'discord.js';
+import { GatewayIntentBits, WebhookClient } from 'discord.js';
 import { Shoukaku, Connectors } from 'shoukaku';
 import { createRequire } from 'module';
 import { AutoPoster } from 'topgg-autoposter';
