@@ -1,5 +1,5 @@
 /*
-    Kana, a Discord bot with WhatsApp integrations and commands.
+    Kana, a feature-rich Discord music bot.
     Copyright (C) 2023 | thaddeus kuah <contact@tkkr.one>
 
     This program is free software: you can redistribute it and/or modify
@@ -42,18 +42,11 @@ const client = new SapphireClient({
         GatewayIntentBits.DirectMessageReactions,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.GuildEmojisAndStickers,
-        GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.Guilds,
         GatewayIntentBits.MessageContent
-    ],
-    partials: [
-        Partials.Channel,
-        Partials.User,
-        Partials.GuildMember,
-        Partials.Message,
     ],
     logger: {
         level: String(process.env.NODE_ENV).toLowerCase() === 'development' ? LogLevel.Debug : LogLevel.Info
