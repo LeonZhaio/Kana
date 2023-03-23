@@ -10,3 +10,10 @@ services:
       - .env
     volumes:
       - .:/kana
+  lavalink:
+    container_name: lavalink
+    image: ghcr.io/freyacodes/lavalink:latest
+    ports:
+      - 2333:2333
+    volumes:
+      - ./application.yml:/opt/Lavalink/application.yml:ro
