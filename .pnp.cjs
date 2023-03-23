@@ -52,6 +52,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["qrcode-terminal", "npm:0.12.0"],\
             ["short-unique-id", "npm:4.4.4"],\
             ["shoukaku", "npm:3.3.1"],\
+            ["systeminformation", "npm:5.17.12"],\
             ["topgg-autoposter", "npm:2.0.1"],\
             ["whatsapp-web.js", "npm:1.19.5"]\
           ],\
@@ -3211,6 +3212,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["qrcode-terminal", "npm:0.12.0"],\
             ["short-unique-id", "npm:4.4.4"],\
             ["shoukaku", "npm:3.3.1"],\
+            ["systeminformation", "npm:5.17.12"],\
             ["topgg-autoposter", "npm:2.0.1"],\
             ["whatsapp-web.js", "npm:1.19.5"]\
           ],\
@@ -4444,6 +4446,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["supports-color", "npm:7.2.0"],\
             ["has-flag", "npm:4.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["systeminformation", [\
+        ["npm:5.17.12", {\
+          "packageLocation": "./.yarn/unplugged/systeminformation-npm-5.17.12-68071b7083/node_modules/systeminformation/",\
+          "packageDependencies": [\
+            ["systeminformation", "npm:5.17.12"]\
           ],\
           "linkType": "HARD"\
         }]\

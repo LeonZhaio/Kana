@@ -1,6 +1,7 @@
 import { Command } from '@sapphire/framework';
 import { EmbedBuilder } from 'discord.js';
 import ms from 'pretty-ms';
+import si from 'systeminformation';
 
 export class InfoCommand extends Command {
     constructor(context, options) {
@@ -33,6 +34,9 @@ export class InfoCommand extends Command {
             totalCommandsInvoked: container.totalCommandsInvoked + stats.totalCommandsInvoked, // Total number of commands invoked by users
             totalUptime: container.totalUptime + stats.totalUptime // Total uptime of the bot in seconds
         };
+        const lavalinkStats = this.container.shoukaku.getNode().stats;
+        const currentLoad = await si.currentLoad();
+        const memory = await si.mem();
         const embed1 = new EmbedBuilder()
             .setTitle('About Kana')
             .setThumbnail(this.container.client.user.displayAvatarURL({ size: 4096 }))
@@ -84,12 +88,12 @@ export class InfoCommand extends Command {
                 },
                 {
                     name: 'Uptime:',
-                    value: ms(process.uptime() * 1000, { verbose: true }),
+                    value: ms(process.uptime() * 1000, { secondsDecimalDigits: 0 }),
                     inline: true
                 },
                 {
                     name: 'Active players:',
-                    value: String(this.container.shoukaku.getNode().stats.players),
+                    value: String(lavalinkStats.players),
                     inline: true
                 },
                 {
@@ -110,6 +114,16 @@ export class InfoCommand extends Command {
                 {
                     name: 'Total uptime:',
                     value: ms(stats.totalUptime * 1000, { secondsDecimalDigits: 0 }),
+                    inline: true
+                },
+                {
+                    name: 'CPU load:',
+                    value: `${Math.round((currentLoad.currentLoad + Number.EPSILON) * 100) / 100}%`,
+                    inline: true
+                },
+                {
+                    name: 'Memory usage:',
+                    value: `${Math.round((memory.used / (1024 * 1024 * 1024)) * 100) / 100} GB / ${Math.round((memory.total / (1024 * 1024 * 1024)) * 100) / 100} GB`,
                     inline: true
                 }
             ]);
