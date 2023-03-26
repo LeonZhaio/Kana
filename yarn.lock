@@ -1295,6 +1295,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@top-gg/sdk@npm:^3.1.4":
+  version: 3.1.4
+  resolution: "@top-gg/sdk@npm:3.1.4"
+  dependencies:
+    raw-body: ^2.5.2
+    undici: ^5.21.0
+  checksum: e3cb4087660709e49aae78e1a29ad58b9e5e1eb08e737df2a16d7cbf8d7c3975f1f3021bb253005e9260940b0051bbddc69b2cc30b804c047eb2cc93c3cfdc5f
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 18.11.18
   resolution: "@types/node@npm:18.11.18"
@@ -1936,6 +1946,13 @@ __metadata:
   version: 0.37.36
   resolution: "discord-api-types@npm:0.37.36"
   checksum: ba3de3640270738c6fcef515a5d3a22069c89973e7d95984a7ddf1633a6e01fef2b99d4524f4535771694f87e4d779aa7511f21e06abd1c25707b4791c29d386
+  languageName: node
+  linkType: hard
+
+"discord-api-types@npm:^0.37.37":
+  version: 0.37.37
+  resolution: "discord-api-types@npm:0.37.37"
+  checksum: 6b680f52c19aebf0dd1a714ef109a55bfe6786d10fd410f7bf1ee9244041f8b10ba81a988799a832382b34b2ae5ef3027ee31f6d1cf4555f1647252635c6eaaa
   languageName: node
   linkType: hard
 
@@ -2754,10 +2771,10 @@ __metadata:
     "@sapphire/plugin-subcommands": ^4.0.0
     "@sapphire/ratelimits": ^2.4.6
     "@sapphire/stopwatch": ^1.5.0
-    "@top-gg/sdk": ^3.1.3
+    "@top-gg/sdk": ^3.1.4
     axios: ^1.3.4
     common-tags: ^1.8.2
-    discord-api-types: ^0.37.36
+    discord-api-types: ^0.37.37
     discord.js: ^14.8.0
     dotenv: ^16.0.3
     eslint: ^8.36.0
@@ -3508,6 +3525,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"raw-body@npm:^2.5.2":
+  version: 2.5.2
+  resolution: "raw-body@npm:2.5.2"
+  dependencies:
+    bytes: 3.1.2
+    http-errors: 2.0.0
+    iconv-lite: 0.4.24
+    unpipe: 1.0.0
+  checksum: ba1583c8d8a48e8fbb7a873fdbb2df66ea4ff83775421bfe21ee120140949ab048200668c47d9ae3880012f6e217052690628cf679ddfbd82c9fc9358d574676
+  languageName: node
+  linkType: hard
+
 "readable-stream@npm:^2.0.0, readable-stream@npm:^2.0.2, readable-stream@npm:^2.0.5, readable-stream@npm:~2.3.6":
   version: 2.3.7
   resolution: "readable-stream@npm:2.3.7"
@@ -4046,7 +4075,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^5.20.0":
+"undici@npm:^5.20.0, undici@npm:^5.21.0":
   version: 5.21.0
   resolution: "undici@npm:5.21.0"
   dependencies:

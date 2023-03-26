@@ -38,10 +38,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sapphire/plugin-subcommands", "npm:4.0.0"],\
             ["@sapphire/ratelimits", "npm:2.4.6"],\
             ["@sapphire/stopwatch", "npm:1.5.0"],\
-            ["@top-gg/sdk", "npm:3.1.3"],\
+            ["@top-gg/sdk", "npm:3.1.4"],\
             ["axios", "npm:1.3.4"],\
             ["common-tags", "npm:1.8.2"],\
-            ["discord-api-types", "npm:0.37.36"],\
+            ["discord-api-types", "npm:0.37.37"],\
             ["discord.js", "npm:14.8.0"],\
             ["dotenv", "npm:16.0.3"],\
             ["eslint", "npm:8.36.0"],\
@@ -1490,6 +1490,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["raw-body", "npm:2.5.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:3.1.4", {\
+          "packageLocation": "./.yarn/cache/@top-gg-sdk-npm-3.1.4-2917d631e1-e3cb408766.zip/node_modules/@top-gg/sdk/",\
+          "packageDependencies": [\
+            ["@top-gg/sdk", "npm:3.1.4"],\
+            ["raw-body", "npm:2.5.2"],\
+            ["undici", "npm:5.21.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@types/node", [\
@@ -2248,6 +2257,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/discord-api-types-npm-0.37.36-24392287f0-ba3de36402.zip/node_modules/discord-api-types/",\
           "packageDependencies": [\
             ["discord-api-types", "npm:0.37.36"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:0.37.37", {\
+          "packageLocation": "./.yarn/cache/discord-api-types-npm-0.37.37-417c73fff9-6b680f52c1.zip/node_modules/discord-api-types/",\
+          "packageDependencies": [\
+            ["discord-api-types", "npm:0.37.37"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3169,10 +3185,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sapphire/plugin-subcommands", "npm:4.0.0"],\
             ["@sapphire/ratelimits", "npm:2.4.6"],\
             ["@sapphire/stopwatch", "npm:1.5.0"],\
-            ["@top-gg/sdk", "npm:3.1.3"],\
+            ["@top-gg/sdk", "npm:3.1.4"],\
             ["axios", "npm:1.3.4"],\
             ["common-tags", "npm:1.8.2"],\
-            ["discord-api-types", "npm:0.37.36"],\
+            ["discord-api-types", "npm:0.37.37"],\
             ["discord.js", "npm:14.8.0"],\
             ["dotenv", "npm:16.0.3"],\
             ["eslint", "npm:8.36.0"],\
@@ -4032,6 +4048,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/raw-body-npm-2.5.1-9dd1d9fff9-5362adff15.zip/node_modules/raw-body/",\
           "packageDependencies": [\
             ["raw-body", "npm:2.5.1"],\
+            ["bytes", "npm:3.1.2"],\
+            ["http-errors", "npm:2.0.0"],\
+            ["iconv-lite", "npm:0.4.24"],\
+            ["unpipe", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:2.5.2", {\
+          "packageLocation": "./.yarn/cache/raw-body-npm-2.5.2-5cb9dfebc1-ba1583c8d8.zip/node_modules/raw-body/",\
+          "packageDependencies": [\
+            ["raw-body", "npm:2.5.2"],\
             ["bytes", "npm:3.1.2"],\
             ["http-errors", "npm:2.0.0"],\
             ["iconv-lite", "npm:0.4.24"],\
