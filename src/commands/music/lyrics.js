@@ -43,13 +43,24 @@ export class LyricsCommand extends Command {
         const track = result.tracks.shift();
         if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
         const url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
-        let res = await axios({
-            method: 'get',
-            url,
-            headers: {
-                Authorization: this.container.config.apiAuth
-            }
-        });
+        let res;
+        try {
+            res = await axios({
+                method: 'get',
+                url,
+                headers: {
+                    Authorization: this.container.config.apiAuth
+                }
+            });
+        } catch (e) {
+            res = await axios({
+                method: 'get',
+                url,
+                headers: {
+                    Authorization: this.container.config.apiAuth
+                }
+            });
+        }
         let motd = this.container.motd;
         if (!Object(motd) || !motd.enabled || motd?.text?.length <= 0) motd = { enabled: false };
         res = res.data;
@@ -101,13 +112,24 @@ export class LyricsCommand extends Command {
         const track = result.tracks.shift();
         if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
         const url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
-        let res = await axios({
-            method: 'get',
-            url,
-            headers: {
-                Authorization: this.container.config.apiAuth
-            }
-        });
+        let res;
+        try {
+            res = await axios({
+                method: 'get',
+                url,
+                headers: {
+                    Authorization: this.container.config.apiAuth
+                }
+            });
+        } catch (e) {
+            res = await axios({
+                method: 'get',
+                url,
+                headers: {
+                    Authorization: this.container.config.apiAuth
+                }
+            });
+        }
         res = res.data;
         let lyricsLines = [];
         let lyrics;
