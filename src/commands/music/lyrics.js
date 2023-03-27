@@ -53,13 +53,17 @@ export class LyricsCommand extends Command {
                 }
             });
         } catch (e) {
-            res = await axios({
-                method: 'get',
-                url,
-                headers: {
-                    Authorization: this.container.config.apiAuth
-                }
-            });
+            try {
+                res = await axios({
+                    method: 'get',
+                    url,
+                    headers: {
+                        Authorization: this.container.config.apiAuth
+                    }
+                });
+            } catch (e) {
+                return interaction.editReply({ embeds: [this.container.util.embed('error', '502: Failed to fetch lyrics. Please try again.')] });
+            }
         }
         let motd = this.container.motd;
         if (!Object(motd) || !motd.enabled || motd?.text?.length <= 0) motd = { enabled: false };
@@ -122,13 +126,17 @@ export class LyricsCommand extends Command {
                 }
             });
         } catch (e) {
-            res = await axios({
-                method: 'get',
-                url,
-                headers: {
-                    Authorization: this.container.config.apiAuth
-                }
-            });
+            try {
+                res = await axios({
+                    method: 'get',
+                    url,
+                    headers: {
+                        Authorization: this.container.config.apiAuth
+                    }
+                });
+            } catch (e) {
+                return msg.reply('502: Failed to fetch lyrics. Please try again.');
+            }
         }
         res = res.data;
         let lyricsLines = [];
