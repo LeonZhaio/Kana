@@ -34,7 +34,9 @@ export class VolumeCommand extends Command {
             return interaction.reply({ embeds: [this.container.util.embed('error', `Out of volume range (**${this.container.config.minVol}%** to **${this.container.config.maxVol}%**)`)] });
         }
         dispatcher.player.setVolume(nv / 100);
-        await interaction.reply({ embeds: [this.container.util.embed('success', `Volume set to **${nv}%**.`)] });
+        await interaction.reply({ embeds: [this.container.util.embed('loading', `Setting volume to **${nv}%**...`)] });
+        await VolumeCommand.wait(5000);
+        await interaction.editReply({ embeds: [this.container.util.embed('success', `Volume set to **${nv}%**.`)] });
     }
 
     async whatsappRun({ msg, dispatcher, sameVoice, voice, args, discordUser }) {
@@ -56,5 +58,9 @@ export class VolumeCommand extends Command {
 
     static inRange(x, min, max) {
         return (x - min) * ( x - max) <= 0;
+    }
+
+    static wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }
