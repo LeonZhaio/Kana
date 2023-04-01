@@ -62,7 +62,7 @@ export class LyricsCommand extends Command {
                     }
                 });
             } catch (e) {
-                return interaction.editReply({ embeds: [this.container.util.embed('error', '502: Failed to fetch lyrics. Please try again.')] });
+                return interaction.editReply({ embeds: [this.container.util.embed('error', 'Failed to fetch lyrics. Please try again.')] });
             }
         }
         let motd = this.container.motd;
@@ -135,7 +135,7 @@ export class LyricsCommand extends Command {
                     }
                 });
             } catch (e) {
-                return msg.reply('502: Failed to fetch lyrics. Please try again.');
+                return msg.reply('Failed to fetch lyrics. Please try again.');
             }
         }
         res = res.data;
