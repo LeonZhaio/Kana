@@ -283,7 +283,7 @@ export class PlayCommand extends Command {
         }
     }
 
-    static truncate(str, n){
+    static truncate(str, n) {
         return (str.length > n) ? str.slice(0, n-1) + '...' : str;
     }
 }
