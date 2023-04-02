@@ -88,7 +88,7 @@ export class PlaylistCommand extends Subcommand {
                         .addStringOption((option) => 
                             option
                                 .setName('id')
-                                .setDescription('The ID of the playlist you want to delete. Get this using /playlist-info.')
+                                .setDescription('The ID of the playlist you want to delete. Get this using /playlist info.')
                                 .setRequired(true)
                         )
                 )
@@ -99,7 +99,7 @@ export class PlaylistCommand extends Subcommand {
                         .addStringOption((option) => 
                             option
                                 .setName('id')
-                                .setDescription('The ID of the playlist you want to edit. Get this using /playlist-info.')
+                                .setDescription('The name / ID of the playlist you would like to edit.')
                                 .setRequired(true)
                         )
                         .addStringOption((option) =>
@@ -194,7 +194,7 @@ export class PlaylistCommand extends Subcommand {
                         .addIntegerOption((option) =>
                             option
                                 .setName('index')
-                                .setDescription('The index of the track to be removed. Get this using /playlist-info.')
+                                .setDescription('The index of the track to be removed. Get this using /playlist info.')
                                 .setRequired(true)
                         )
                 )
