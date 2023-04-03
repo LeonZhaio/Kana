@@ -39,7 +39,7 @@ export class PlayCommand extends Command {
                     option
                         .setName('query')
                         .setDescription('What would you like to search? Supports URLs from many sources and search queries from 3 sources.')
-                        .setRequired(false)
+                        .setRequired(true)
                         .setAutocomplete(true)
                 )
                 .addStringOption((option) =>
@@ -66,7 +66,7 @@ export class PlayCommand extends Command {
                 .addStringOption((option) =>
                     option
                         .setName('kana-playlist')
-                        .setDescription('Use this argument to load a Kana playlist. Accepts playlist names or IDs. Check out /playlist.')
+                        .setDescription('Loads a Kana playlist, accepts playlist names or IDs and overrides \'query\'. Check out /playlist.')
                         .setRequired(false)
                 )
         );
