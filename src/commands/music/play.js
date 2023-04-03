@@ -7,7 +7,7 @@ export class PlayCommand extends Command {
         super(context, {
             ...options,
             name: 'play',
-            description: 'Plays music from one of multiple supported sources.',
+            description: 'Plays music from one of multiple supported sources. Requires either the query or playlist argument.',
             aliases: ['p', 'pl'],
             preconditions: ['voice', 'sameVoice']
         });
@@ -39,7 +39,7 @@ export class PlayCommand extends Command {
                     option
                         .setName('query')
                         .setDescription('What would you like to search? Supports URLs from many sources and search queries from 3 sources.')
-                        .setRequired(true)
+                        .setRequired(false)
                         .setAutocomplete(true)
                 )
                 .addStringOption((option) =>
@@ -63,6 +63,12 @@ export class PlayCommand extends Command {
                         .setDescription('Whether to add the track to the top of the queue. If not specified or false, adds to the end.')
                         .setRequired(false)
                 )
+                .addStringOption((option) =>
+                    option
+                        .setName('kana-playlist')
+                        .setDescription('Use this argument to load a Kana playlist. Accepts playlist names or IDs. Check out /playlist.')
+                        .setRequired(false)
+                )
         );
         registry.registerContextMenuCommand((builder) => 
             builder
@@ -73,12 +79,22 @@ export class PlayCommand extends Command {
     }
 
     async chatInputRun(interaction) {
+        const kana_playlist = interaction.options.getString('kana-playlist');
         const query = interaction.options.getString('query');
         const source = interaction.options.getString('source') || 'ytmsearch';
         const next = interaction.options.getBoolean('next') || false;
         const node = this.container.shoukaku.getNode();
         if (!interaction.member.voice.channel.joinable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to join <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
         if (!interaction.member.voice.channel.speakable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to play audio in <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
+        if (kana_playlist) {
+            const playlists = await this.container.db.get('playlists');
+            const publicPlaylists = Object.values(playlists).filter(playlist => playlist.info.private === false);
+            const userPlaylists = Object.values(playlists).filter(playlist => playlist.info.owner === interaction.user.id);
+            const selectedPlaylist = userPlaylists.find(playlist => playlist.info.name.toLowerCase() === kana_playlist.toLowerCase() || playlist.info.id === kana_playlist)  || publicPlaylists.find(playlist => playlist.info.name.toLowerCase() === kana_playlist.toLowerCase() || playlist.info.id === kana_playlist);
+            if (!selectedPlaylist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')], ephemeral: true });
+            for (const track of selectedPlaylist.tracks) await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track);
+            return interaction.reply({ embeds: [this.container.util.embed('success', `Queued **${selectedPlaylist.tracks.length} tracks** from **${selectedPlaylist.info.name}**.`)] });
+        }
         if (PlayCommand.checkURL(query)) {
             let result = await node.rest.resolve(query); 
             if (!result?.tracks.length) result = await node.rest.resolve(query); // Retry
