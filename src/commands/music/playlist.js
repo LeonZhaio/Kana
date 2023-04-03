@@ -48,6 +48,10 @@ export class PlaylistCommand extends Subcommand {
                 {
                     name: 'load',
                     chatInputRun: 'playlistLoad'
+                },
+                {
+                    name: 'sync',
+                    chatInputRun: 'playlistSync'
                 }
             ]
         });
@@ -207,6 +211,24 @@ export class PlaylistCommand extends Subcommand {
                                 .setName('id')
                                 .setDescription('The name / ID of the playlist you would like to load (allows public)')
                                 .setRequired(true))
+                )
+                .addSubcommand((command) =>
+                    command
+                        .setName('sync')
+                        .setDescription('Synchronises a Kana playlist with an external source. Basically overwrites it.')
+                        .addStringOption((option) =>
+                            option
+                                .setName('id')
+                                .setDescription('The name / ID of the playlist you would like to synchronise.')
+                                .setRequired(true)
+                        )
+                        .addStringOption((option) => 
+                            option
+                                .setName('url')
+                                .setDescription('Provide an external playlist URL for Kana to sync with.')
+                                .setRequired(true)
+                                .setAutocomplete(true)
+                        )
                 );
         });
     }
@@ -447,6 +469,31 @@ export class PlaylistCommand extends Subcommand {
         return interaction.reply({ embeds: [this.container.util.embed('success', `Queued **${selectedPlaylist.tracks.length} tracks** from **${selectedPlaylist.info.name}**.`)] });
     }
 
+    async playlistSync(interaction) {
+        const playlists = await this.container.db.get('playlists');
+        const url = interaction.options.getString('url');
+        const id = interaction.options.getString('id');
+        const userPlaylists = Object.values(playlists).filter(playlist => playlist.info.owner === interaction.user.id);
+        const playlist = Object.values(userPlaylists).find(playlist => playlist.info.name.toLowerCase() === id.toLowerCase() || playlist.info.id === id);
+        if (!playlist) return interaction.reply({ embeds: [this.container.util.embed('error', 'That playlist doesn\'t exist.')], ephemeral: true });
+        if (playlist.info.owner !== interaction.user.id) return interaction.reply({ embeds: [this.container.util.embed('error', 'You don\'t own that playlist.')], ephemeral: true });
+        const node = this.container.shoukaku.getNode();
+        if (PlaylistCommand.isValidUrl(url)) {
+            let result = await node.rest.resolve(url); 
+            if (!result?.tracks.length) result = await node.rest.resolve(url); // Retry
+            if (!result?.tracks.length) return interaction.reply({ embeds: [this.container.util.embed('error', `No results for \`${url}\`.`)], ephemeral: true });
+            const playlistBool = result.loadType === 'PLAYLIST_LOADED';
+            if (!playlistBool) return interaction.reply({ embeds: [this.container.util.embed('error', 'That\'s not a playlist.')], ephemeral: true });
+            const compare = PlaylistCommand.compare(playlists[playlist.info.id], result);
+            const diff = [...compare.aOnly, ...compare.bOnly];
+            playlists[playlist.info.id].tracks.length = 0;
+            for (const track of result.tracks) playlists[playlist.info.id].tracks.push(track);
+            await interaction.reply({ embeds: [this.container.util.embed('success', `Synchronised **${result.tracks.length} tracks** from **${result.playlistInfo.name}** (external) to **${playlist.info.name}** - **${diff.length} differences**.`)] }).catch(() => null);
+            await this.container.db.set('playlists', playlists);
+            return;
+        } else return interaction.reply({ embeds: [this.container.util.embed('error', 'That\'s not a valid URL.')], ephemeral: true });
+    }
+
     async autocompleteRun(interaction) {
         if (interaction.options.getSubcommand() !== 'add') return;
         let node = this.node;
@@ -483,6 +530,15 @@ export class PlaylistCommand extends Subcommand {
         const search = await node.rest.resolve(`${source}:${query}`);
         if (search.loadType !== 'SEARCH_RESULT') return interaction.respond([{ name: PlaylistCommand.truncate(query, 97), value: query }]);
         return interaction.respond(search.tracks.map((track) => ({ name: PlaylistCommand.truncate(`${track.info.title} - ${track.info.author}`, 97), value: track.info.uri }))).catch(() => null);
+    }
+
+    static compare(a, b) {
+        // Compare an array of tracks and return the differences.
+        const aTracks = a.tracks.map(track => track.track);
+        const bTracks = b.tracks.map(track => track.track);
+        const aOnly = aTracks.filter(track => !bTracks.includes(track));
+        const bOnly = bTracks.filter(track => !aTracks.includes(track));
+        return { aOnly, bOnly };
     }
 
     static isValidUrl(url) {
