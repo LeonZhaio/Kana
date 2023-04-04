@@ -35,6 +35,7 @@ export class LyricsCommand extends Command {
         let query = interaction.options.getString('query');
         if (!query && !dispatcher?.current) return interaction.editReply({ embeds: [this.container.util.embed('error', 'You did not provide a query and there is nothing playing.')] });
         let url;
+        let customQ;
         if (!query && dispatcher.current.info.sourceName === 'spotify') {
             url = `https://api.tkkr.one/lyrics?query=${dispatcher.current.info.identifier}`;
         } else {
@@ -45,7 +46,13 @@ export class LyricsCommand extends Command {
             else result = await node.rest.resolve(`spsearch:${query}`);
             if (!result.tracks.length) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
             const track = result.tracks.shift();
+            customQ = `${track.info.title} - ${track.info.author}`;
             if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
+            if (
+                LyricsCommand.stringMatchPercentage(track.info.title, query) < 90 &&
+                LyricsCommand.stringMatchPercentage(track.info.author, query) < 90 &&
+                LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, query) < 75
+            ) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] }); 
             url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
         }
         let res;
@@ -86,8 +93,8 @@ export class LyricsCommand extends Command {
         const pm = new PaginatedMessage();
         for (const page of lyr) {
             pm.addPageEmbed((embed) => {
-                embed.setAuthor({ name: `Lyrics${!interaction.options.getString('query') ? '' : ' (Custom query)'}` })
-                    .setTitle(query)
+                embed.setAuthor({ name: 'Lyrics' })
+                    .setTitle(customQ || `${dispatcher.current.info.title} - ${dispatcher.current.info.author}`)
                     .setDescription(page)
                     .setFooter({ text: `Provided by ${res.data.provider} | ` + this.container.config.footer.text, iconURL: this.container.config.footer.iconURL })
                     .setColor('#cba6f7');
@@ -113,6 +120,7 @@ export class LyricsCommand extends Command {
         let query = args.join(' ');
         if (!query && !dispatcher?.current) return await msg.reply('You did not provide a query and there is nothing playing.');
         let url;
+        let customQ;
         if (!query && dispatcher.current.info.sourceName === 'spotify') {
             url = `https://api.tkkr.one/lyrics?query=${dispatcher.current.info.identifier}`;
         } else {
@@ -123,7 +131,13 @@ export class LyricsCommand extends Command {
             else result = await node.rest.resolve(`spsearch:${query}`);
             if (!result.tracks.length) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
             const track = result.tracks.shift();
+            customQ = `${track.info.title} - ${track.info.author}`;
             if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
+            if (
+                LyricsCommand.stringMatchPercentage(track.info.title, query) < 90 &&
+                LyricsCommand.stringMatchPercentage(track.info.author, query) < 90 &&
+                LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, query) < 75
+            ) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
             url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
         }
         let res;
@@ -159,7 +173,7 @@ export class LyricsCommand extends Command {
             lyrics = lyricsLines.join('\n');
         }
         if (!lyrics || lyrics instanceof Error) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
-        else msg.reply(`*Lyrics${!args.length ? ` (${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')})`: ' (Custom query)'}* - Provided by ${res.data.provider}\n${lyrics}`);
+        else msg.reply(`*Lyrics${!args.length ? ` (${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')})`: ` (${customQ})`}* - Provided by ${res.data.provider}\n${lyrics}`);
     }
 
     static stringMatchPercentage(str1, str2) {
