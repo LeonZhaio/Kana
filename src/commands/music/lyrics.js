@@ -38,7 +38,7 @@ export class LyricsCommand extends Command {
         if (!query && dispatcher.current.info.sourceName === 'spotify') {
             url = `https://api.tkkr.one/lyrics?query=${dispatcher.current.info.identifier}`;
         } else {
-            if (!query) query = `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
+            query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
             const node = this.container.shoukaku.getNode();
             let result;
             if (query.includes('https://open.spotify.com/track/')) result = await node.rest.resolve(`${query}`);
