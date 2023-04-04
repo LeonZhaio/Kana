@@ -34,7 +34,7 @@ export class LyricsCommand extends Command {
         const dispatcher = this.container.queue.get(interaction.guildId);
         let query = interaction.options.getString('query');
         if (!query && !dispatcher?.current) return interaction.editReply({ embeds: [this.container.util.embed('error', 'You did not provide a query and there is nothing playing.')] });
-        if (!query) query = `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
+        if (!query) query = dispatcher.current.info.sourceName === 'spotify' ? dispatcher.current.info.identifier : `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
         const node = this.container.shoukaku.getNode();
         let result;
         if (query.includes('https://open.spotify.com/track/')) result = await node.rest.resolve(`${query}`);
@@ -107,7 +107,7 @@ export class LyricsCommand extends Command {
     async whatsappRun({ msg, args, dispatcher}) {
         let query = args.join(' ');
         if (!query && !dispatcher?.current) return await msg.reply('You did not provide a query and there is nothing playing.');
-        query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
+        query = query || dispatcher.current.info.sourceName === 'spotify' ? dispatcher.current.info.identifier : `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
         const node = this.container.shoukaku.getNode();
         let result;
         if (query.includes('https://open.spotify.com/track/')) result = await node.rest.resolve(`${query}`);
