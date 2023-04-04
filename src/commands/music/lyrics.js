@@ -67,7 +67,7 @@ export class LyricsCommand extends Command {
                     }
                 });
             } catch (e) {
-                return interaction.editReply({ embeds: [this.container.util.embed('error', 'Failed to fetch lyrics. Please try again.')] });
+                return interaction.editReply({ embeds: [this.container.util.embed('error', 'No lyrics found for this track.')] });
             }
         }
         let motd = this.container.motd;
@@ -145,7 +145,7 @@ export class LyricsCommand extends Command {
                     }
                 });
             } catch (e) {
-                return msg.reply('Failed to fetch lyrics. Please try again.');
+                return msg.reply('No lyrics found for this track.');
             }
         }
         res = res.data;
@@ -160,6 +160,30 @@ export class LyricsCommand extends Command {
         }
         if (!lyrics || lyrics instanceof Error) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
         else msg.reply(`*Lyrics${!args.length ? ` (${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')})`: ' (Custom query)'}* - Provided by ${res.data.provider}\n${lyrics}`);
+    }
+
+    static stringMatchPercentage(str1, str2) {
+        // Convert both strings to lowercase to ensure a case-insensitive comparison
+        str1 = str1.toLowerCase();
+        str2 = str2.toLowerCase();
+      
+        // Calculate the edit distance between the two strings using the Levenshtein distance algorithm
+        const matrix = [];
+        const len1 = str1.length, len2 = str2.length;
+        for (let i = 0; i <= len1; i++) {
+            matrix[i] = [i];
+            for (let j = 1; j <= len2; j++) {
+                matrix[i][j] = i === 0 ? j :
+                    Math.min(matrix[i - 1][j - 1] +
+                (str1.charAt(i - 1) === str2.charAt(j - 1) ? 0 : 1),
+                    Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
+            }
+        }
+      
+        // Calculate the percentage match using the formula: 100 * (1 - (edit distance / length of longer string))
+        const editDistance = matrix[len1][len2];
+        const maxLength = Math.max(len1, len2);
+        return Math.round(100 * (1 - (editDistance / maxLength)));
     }
 
     static splitLyrics (lyrics) {
