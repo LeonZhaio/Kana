@@ -18,7 +18,7 @@ export class LyricsCommand extends Command {
             builder
                 .setName(this.name)
                 .setDescription(this.description)
-                .setDMPermission(false)
+                .setDMPermission(true)
                 .addStringOption(option => 
                     option
                         .setName('query')
