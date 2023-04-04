@@ -42,16 +42,17 @@ export class LyricsCommand extends Command {
             query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
             const node = this.container.shoukaku.getNode();
             let result;
-            if (query.includes('https://open.spotify.com/track/')) result = await node.rest.resolve(`${query}`);
+            const spotifyURL = query.includes('https://open.spotify.com/track/');
+            if (spotifyURL) result = await node.rest.resolve(`${query}`);
             else result = await node.rest.resolve(`spsearch:${query}`);
             if (!result.tracks.length) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
             const track = result.tracks.shift();
             customQ = `${track.info.title} - ${track.info.author}`;
             if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
             if (
-                LyricsCommand.stringMatchPercentage(track.info.title, query) < 90 &&
-                LyricsCommand.stringMatchPercentage(track.info.author, query) < 90 &&
-                LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, query) < 75
+                LyricsCommand.stringMatchPercentage(track.info.title, spotifyURL ? customQ : query) < 90 &&
+                LyricsCommand.stringMatchPercentage(track.info.author, spotifyURL ? customQ : query) < 90 &&
+                LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, spotifyURL ? customQ : query) < 75
             ) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] }); 
             url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
         }
@@ -127,16 +128,17 @@ export class LyricsCommand extends Command {
             query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
             const node = this.container.shoukaku.getNode();
             let result;
-            if (query.includes('https://open.spotify.com/track/')) result = await node.rest.resolve(`${query}`);
+            const spotifyURL = query.includes('https://open.spotify.com/track/');
+            if (spotifyURL) result = await node.rest.resolve(`${query}`);
             else result = await node.rest.resolve(`spsearch:${query}`);
             if (!result.tracks.length) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
             const track = result.tracks.shift();
             customQ = `${track.info.title} - ${track.info.author}`;
             if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
             if (
-                LyricsCommand.stringMatchPercentage(track.info.title, query) < 90 &&
-                LyricsCommand.stringMatchPercentage(track.info.author, query) < 90 &&
-                LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, query) < 75
+                LyricsCommand.stringMatchPercentage(track.info.title, spotifyURL ? customQ : query) < 90 &&
+                LyricsCommand.stringMatchPercentage(track.info.author, spotifyURL ? customQ : query) < 90 &&
+                LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, spotifyURL ? customQ : query) < 75
             ) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
             url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
         }
