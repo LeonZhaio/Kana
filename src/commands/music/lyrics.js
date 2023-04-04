@@ -34,15 +34,20 @@ export class LyricsCommand extends Command {
         const dispatcher = this.container.queue.get(interaction.guildId);
         let query = interaction.options.getString('query');
         if (!query && !dispatcher?.current) return interaction.editReply({ embeds: [this.container.util.embed('error', 'You did not provide a query and there is nothing playing.')] });
-        if (!query) query = dispatcher.current.info.sourceName === 'spotify' ? dispatcher.current.info.identifier : `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
-        const node = this.container.shoukaku.getNode();
-        let result;
-        if (query.includes('https://open.spotify.com/track/')) result = await node.rest.resolve(`${query}`);
-        else result = await node.rest.resolve(`spsearch:${query}`);
-        if (!result.tracks.length) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
-        const track = result.tracks.shift();
-        if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
-        const url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
+        let url;
+        if (!query && dispatcher.current.info.sourceName === 'spotify') {
+            url = `https://api.tkkr.one/lyrics?query=${dispatcher.current.info.identifier}`;
+        } else {
+            if (!query) query = `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
+            const node = this.container.shoukaku.getNode();
+            let result;
+            if (query.includes('https://open.spotify.com/track/')) result = await node.rest.resolve(`${query}`);
+            else result = await node.rest.resolve(`spsearch:${query}`);
+            if (!result.tracks.length) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
+            const track = result.tracks.shift();
+            if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
+            url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
+        }
         let res;
         try {
             res = await axios({
@@ -107,15 +112,20 @@ export class LyricsCommand extends Command {
     async whatsappRun({ msg, args, dispatcher}) {
         let query = args.join(' ');
         if (!query && !dispatcher?.current) return await msg.reply('You did not provide a query and there is nothing playing.');
-        query = query || dispatcher.current.info.sourceName === 'spotify' ? dispatcher.current.info.identifier : `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
-        const node = this.container.shoukaku.getNode();
-        let result;
-        if (query.includes('https://open.spotify.com/track/')) result = await node.rest.resolve(`${query}`);
-        else result = await node.rest.resolve(`spsearch:${query}`);
-        if (!result.tracks.length) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
-        const track = result.tracks.shift();
-        if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
-        const url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
+        let url;
+        if (!query && dispatcher.current.info.sourceName === 'spotify') {
+            url = `https://api.tkkr.one/lyrics?query=${dispatcher.current.info.identifier}`;
+        } else {
+            query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
+            const node = this.container.shoukaku.getNode();
+            let result;
+            if (query.includes('https://open.spotify.com/track/')) result = await node.rest.resolve(`${query}`);
+            else result = await node.rest.resolve(`spsearch:${query}`);
+            if (!result.tracks.length) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
+            const track = result.tracks.shift();
+            if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
+            url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
+        }
         let res;
         try {
             res = await axios({
