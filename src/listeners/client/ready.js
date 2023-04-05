@@ -1,6 +1,7 @@
 import { Listener } from '@sapphire/framework';
 import { ActivityType } from 'discord.js';
 import axios from 'axios';
+import _ from 'lodash';
 
 export class ReadyListener extends Listener {
     constructor(context, options) {
@@ -52,7 +53,7 @@ export class ReadyListener extends Listener {
                 this.container.logger.debug('Presence updated.');
             }
             if (!maintenance && !motd.enabled && this.container.presenceUpdateRequired) {
-                const activity = this.container.config.activities[this.container.statusRotatorCurrent];
+                const activity = _.cloneDeep(this.container.config.activities[this.container.statusRotatorCurrent]);
                 activity.name = activity.name
                     .replace('{version}', this.container.client.version)
                     .replace('{serverCount}', this.container.client.guilds.cache.size);

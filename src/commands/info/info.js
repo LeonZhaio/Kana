@@ -34,11 +34,6 @@ export class InfoCommand extends Command {
             totalCommandsInvoked: container.totalCommandsInvoked + stats.totalCommandsInvoked, // Total number of commands invoked by users
             totalUptime: container.totalUptime + stats.totalUptime // Total uptime of the bot in seconds
         };
-        for (let i = 0; i < this.container.config.activities.length; i++) {
-            this.container.config.activities[i].name = this.container.config.activities[i].name
-                .replace('{version}', this.container.client.version)
-                .replace('{serverCount}', this.container.client.guilds.cache.size);
-        }
         const lavalinkStats = this.container.shoukaku.getNode().stats;
         const currentLoad = await si.currentLoad();
         const memory = await si.mem();
