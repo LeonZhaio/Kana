@@ -96,7 +96,9 @@ export class LyricsCommand extends Command {
                 });
             }
             pm.run(interaction);
-        }).catch(() => {
+        }).catch((err) => {
+            if (err.toJSON().status == 404) return interaction.editReply({ embeds: [this.container.util.embed('error', 'Lyrics are unavailable for this track.')] });
+            this.container.logger.error('Lyrics fetching error: ' + err);
             return interaction.editReply({ embeds: [this.container.util.embed('error', 'An unknown error occurred when fetching lyrics.')] }); 
         });
     }
@@ -161,7 +163,9 @@ export class LyricsCommand extends Command {
             lyrics.lines.forEach(line => lyricsLines.push(line.words));
             const lyr = lyricsLines.join('\n');
             msg.reply(`*Lyrics${!args.length ? ` (${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')})`: ` (${customQ})`}* - Provided by ${lyrics.providerDisplayName}\n${lyr}`);
-        }).catch(() => {
+        }).catch((err) => {
+            if (err.toJSON().status == 404) return msg.reply('Lyrics are unavailable for this track.');
+            this.container.logger.error('Lyrics fetching error: ' + err);
             return msg.reply('An unknown error occurred when fetching lyrics.');
         });
     }
