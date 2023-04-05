@@ -125,6 +125,16 @@ export class ReadyListener extends Listener {
             else this.container.logger.error(`Error while posting stats to discord.bots.gg: ${botsggRes.data}`);
         }, 900000);
 
+        // Updating Spotify access token
+        setInterval(async () => {
+            const spotify = await this.container.db.get('spotify-cfg');
+            if (!spotify || typeof spotify !== 'object') return await this.container.util.refreshSpotifyToken(); // get new token
+            if (spotify.isAnonymous) return await this.container.util.refreshSpotifyToken();
+            const expiry = spotify.accessTokenExpirationTimestampMs;
+            const now = Date.now();
+            if (expiry < now) return await this.container.util.refreshSpotifyToken();
+        }, 5000);
+
         this.container.logWebhook.send('**Kana is initialised and ready.**');
     }
 }

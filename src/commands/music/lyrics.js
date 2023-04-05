@@ -2,6 +2,8 @@ import { Command } from '@sapphire/framework';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import axios from 'axios';
 
+const lyrics_url = 'https://spclient.wg.spotify.com/color-lyrics/v2/track';
+
 export class LyricsCommand extends Command {
     constructor(context, options) {
         super(context, {
@@ -30,80 +32,73 @@ export class LyricsCommand extends Command {
     }
 
     async chatInputRun(interaction) {
-        await interaction.reply({ embeds: [this.container.util.embed('loading', 'Fetching lyrics...')] });
         const dispatcher = this.container.queue.get(interaction.guildId);
         let query = interaction.options.getString('query');
-        if (!query && !dispatcher?.current) return interaction.editReply({ embeds: [this.container.util.embed('error', 'You did not provide a query and there is nothing playing.')] });
-        let url;
+        if (!query && !dispatcher?.current) return interaction.reply({ embeds: [this.container.util.embed('error', 'You did not provide a query and there is nothing playing.')], ephemeral: true });
+        await interaction.reply({ embeds: [this.container.util.embed('loading', 'Fetching lyrics...')] });
+        let iden;
         let customQ;
-        if (!query && dispatcher.current.info.sourceName === 'spotify') {
-            url = `https://api.tkkr.one/lyrics?query=${dispatcher.current.info.identifier}`;
+        if (!query && dispatcher.current.info.sourceName == 'spotify') {
+            iden = dispatcher.current.info.identifier;
+        } else if (query && query.startsWith('ac::')) {
+            iden = query.replace('ac::', '');
         } else {
-            query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
+            query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '').replace(`(${dispatcher.current.info.title.replace(/\(.*?\)/g, '').trim()})`, '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`;
             const node = this.container.shoukaku.getNode();
             let result;
-            const spotifyURL = query.includes('https://open.spotify.com/track/');
+            let finalRes;
+            const spotifyURL = query.startsWith('https://open.spotify.com/track/');
             if (spotifyURL) result = await node.rest.resolve(`${query}`);
             else result = await node.rest.resolve(`spsearch:${query}`);
             if (!result.tracks.length) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
-            const track = result.tracks.shift();
-            customQ = `${track.info.title} - ${track.info.author}`;
-            if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
-            if (
-                LyricsCommand.stringMatchPercentage(track.info.title, spotifyURL ? customQ : query) < 90 &&
-                LyricsCommand.stringMatchPercentage(track.info.author, spotifyURL ? customQ : query) < 90 &&
-                LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, spotifyURL ? customQ : query) < 75
-            ) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] }); 
-            url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
-        }
-        let res;
-        try {
-            res = await axios({
-                method: 'get',
-                url,
-                headers: {
-                    Authorization: this.container.config.apiAuth
+            const tracks = result.tracks;
+            for (let i = 0; i < tracks.length; i++) {
+                const track = tracks[i];
+                customQ = `${track.info.title} - ${track.info.author}`;
+                if (
+                    LyricsCommand.stringMatchPercentage(track.info.title, spotifyURL ? customQ : query) < 90 &&
+                    LyricsCommand.stringMatchPercentage(track.info.author, spotifyURL ? customQ : query) < 90 &&
+                    LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, spotifyURL ? customQ : query) < 75
+                ) continue; 
+                else {
+                    finalRes = track;
+                    break;
                 }
-            });
-        } catch (e) {
-            try {
-                res = await axios({
-                    method: 'get',
-                    url,
-                    headers: {
-                        Authorization: this.container.config.apiAuth
-                    }
-                });
-            } catch (e) {
-                return interaction.editReply({ embeds: [this.container.util.embed('error', 'No lyrics found for this track.')] });
             }
+            if (!finalRes) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] }); 
+            iden = finalRes.info.identifier;
         }
-        let motd = this.container.motd;
-        if (!Object(motd) || !motd.enabled || motd?.text?.length <= 0) motd = { enabled: false };
-        res = res.data;
-        let lyricsLines = [];
-        let lyrics;
-        if (res.error) {
-            this.container.logWebhook.send(`__**Error while getting lyrics:**__\n**Query:** ${res.query}\n\`\`\`${res.error}\`\`\``);
-            return interaction.editReply({ embeds: [this.container.util.embed('error', 'An error occurred when getting lyrics. A bug report has automatically been sent to the developers.')] });
-        } else {
-            res.data.lines.forEach(line => lyricsLines.push(line.words));
-            lyrics = lyricsLines.join('\n');
-        }
-        const lyr = LyricsCommand.splitLyrics(lyrics);
-        const pm = new PaginatedMessage();
-        for (const page of lyr) {
-            pm.addPageEmbed((embed) => {
-                embed.setAuthor({ name: 'Lyrics' })
-                    .setTitle(customQ || `${dispatcher.current.info.title} - ${dispatcher.current.info.author}`)
-                    .setDescription(page)
-                    .setFooter({ text: `Provided by ${res.data.provider} | ` + this.container.config.footer.text, iconURL: this.container.config.footer.iconURL })
-                    .setColor('#cba6f7');
-                if (motd.enabled && motd.text?.length > 0) embed.setFooter({ text: motd.text, iconURL: motd.icon || undefined });
-                return embed;
-            });
-        }
-        pm.run(interaction);
+        const cfg = await this.container.db.get('spotify-cfg');
+        axios.get(`${lyrics_url}/${iden}?format=json&market=from_token`, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+                'App-platform': 'WebPlayer',
+                'authorization': `Bearer ${cfg.accessToken}`
+            },
+            timeout: 3000
+        }).then((res) => {
+            const lyrics = res.data.lyrics;
+            let motd = this.container.motd;
+            if (!Object(motd) || !motd.enabled || motd?.text?.length <= 0) motd = { enabled: false };
+            let lyricsLines = [];
+            lyrics.lines.forEach(line => lyricsLines.push(line.words));
+            const lyr = LyricsCommand.splitLyrics(lyricsLines.join('\n'));
+            const pm = new PaginatedMessage();
+            for (const page of lyr) {
+                pm.addPageEmbed((embed) => {
+                    embed.setAuthor({ name: 'Lyrics' })
+                        .setTitle(customQ || `${dispatcher.current.info.title} - ${dispatcher.current.info.author}`)
+                        .setDescription(page)
+                        .setFooter({ text: `Provided by ${lyrics.providerDisplayName} | ` + this.container.config.footer.text, iconURL: this.container.config.footer.iconURL })
+                        .setColor('#cba6f7');
+                    if (motd.enabled && motd.text?.length > 0) embed.setFooter({ text: motd.text, iconURL: motd.icon || undefined });
+                    return embed;
+                });
+            }
+            pm.run(interaction);
+        }).catch(() => {
+            return interaction.editReply({ embeds: [this.container.util.embed('error', 'An unknown error occurred when fetching lyrics.')] }); 
+        });
     }
 
     async autocompleteRun(interaction) {
@@ -114,68 +109,61 @@ export class LyricsCommand extends Command {
         }
         let query = interaction.options.getString('query');
         const search = await node.rest.resolve(`spsearch:${query}`);
-        return interaction.respond(search.tracks.map((track) => ({ name: LyricsCommand.truncate(`${track.info.title} - ${track.info.author}`, 97), value: track.info.uri }))).catch(() => null);
+        return interaction.respond(search.tracks.map((track) => ({ name: LyricsCommand.truncate(`${track.info.title} - ${track.info.author}`, 97), value: `ac::${track.info.identifier}` }))).catch(() => null);
     }
 
-    async whatsappRun({ msg, args, dispatcher}) {
+    async whatsappRun({ msg, args, dispatcher }) {
         let query = args.join(' ');
         if (!query && !dispatcher?.current) return await msg.reply('You did not provide a query and there is nothing playing.');
-        let url;
+        let iden;
         let customQ;
-        if (!query && dispatcher.current.info.sourceName === 'spotify') {
-            url = `https://api.tkkr.one/lyrics?query=${dispatcher.current.info.identifier}`;
+        if (!query && dispatcher.current.info.sourceName == 'spotify') {
+            iden = dispatcher.current.info.identifier;
         } else {
-            query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
+            query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '').replace(`(${dispatcher.current.info.title.replace(/\(.*?\)/g, '').trim()})`, '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`;
             const node = this.container.shoukaku.getNode();
             let result;
-            const spotifyURL = query.includes('https://open.spotify.com/track/');
+            let finalRes;
+            const spotifyURL = query.startsWith('https://open.spotify.com/track/');
             if (spotifyURL) result = await node.rest.resolve(`${query}`);
             else result = await node.rest.resolve(`spsearch:${query}`);
             if (!result.tracks.length) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
-            const track = result.tracks.shift();
-            customQ = `${track.info.title} - ${track.info.author}`;
-            if (!track.info.uri.includes('/track/') || track.info.sourceName !== 'spotify') return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
-            if (
-                LyricsCommand.stringMatchPercentage(track.info.title, spotifyURL ? customQ : query) < 90 &&
-                LyricsCommand.stringMatchPercentage(track.info.author, spotifyURL ? customQ : query) < 90 &&
-                LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, spotifyURL ? customQ : query) < 75
-            ) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
-            url = `https://api.tkkr.one/lyrics?query=${track.info.identifier}`;
-        }
-        let res;
-        try {
-            res = await axios({
-                method: 'get',
-                url,
-                headers: {
-                    Authorization: this.container.config.apiAuth
+            const tracks = result.tracks;
+            for (let i = 0; i < tracks.length; i++) {
+                const track = tracks[i];
+                customQ = `${track.info.title} - ${track.info.author}`;
+                if (
+                    LyricsCommand.stringMatchPercentage(track.info.title, spotifyURL ? customQ : query) < 90 &&
+                    LyricsCommand.stringMatchPercentage(track.info.author, spotifyURL ? customQ : query) < 90 &&
+                    LyricsCommand.stringMatchPercentage(`${track.info.title} - ${track.info.author}`, spotifyURL ? customQ : query) < 75
+                ) continue; 
+                else {
+                    finalRes = track;
+                    break;
                 }
-            });
-        } catch (e) {
-            try {
-                res = await axios({
-                    method: 'get',
-                    url,
-                    headers: {
-                        Authorization: this.container.config.apiAuth
-                    }
-                });
-            } catch (e) {
-                return msg.reply('No lyrics found for this track.');
             }
+            if (!finalRes) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
+            iden = finalRes.info.identifier;
         }
-        res = res.data;
-        let lyricsLines = [];
-        let lyrics;
-        if (res.error) {
-            this.container.logWebhook.send(`__**Error while getting lyrics:**__\n**Query:** ${res.query}\n\`\`\`${res.error}\`\`\``);
-            return msg.reply('An error occurred when getting lyrics. A bug report has automatically been sent to the developers.');
-        } else {
-            res.data.lines.forEach(line => lyricsLines.push(line.words));
-            lyrics = lyricsLines.join('\n');
-        }
-        if (!lyrics || lyrics instanceof Error) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
-        else msg.reply(`*Lyrics${!args.length ? ` (${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')})`: ` (${customQ})`}* - Provided by ${res.data.provider}\n${lyrics}`);
+        const cfg = await this.container.db.get('spotify-cfg');
+        axios.get(`${lyrics_url}/${iden}?format=json&market=from_token`, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+                'App-platform': 'WebPlayer',
+                'authorization': `Bearer ${cfg.accessToken}`
+            },
+            timeout: 3000
+        }).then((res) => {
+            const lyrics = res.data.lyrics;
+            let motd = this.container.motd;
+            if (!Object(motd) || !motd.enabled || motd?.text?.length <= 0) motd = { enabled: false };
+            let lyricsLines = [];
+            lyrics.lines.forEach(line => lyricsLines.push(line.words));
+            const lyr = lyricsLines.join('\n');
+            msg.reply(`*Lyrics${!args.length ? ` (${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')})`: ` (${customQ})`}* - Provided by ${lyrics.providerDisplayName}\n${lyr}`);
+        }).catch(() => {
+            return msg.reply('An unknown error occurred when fetching lyrics.');
+        });
     }
 
     static stringMatchPercentage(str1, str2) {
@@ -213,7 +201,7 @@ export class LyricsCommand extends Command {
                 i++;
                 if (i >= lineArray.length) break;
             }
-            pages.push(page);
+            if (page.trim().length > 0) pages.push(page);
         }
         return pages;
     }
@@ -222,42 +210,21 @@ export class LyricsCommand extends Command {
         return (str.length > n) ? str.slice(0, n-1) + '...' : str;
     }
 
-    /*
-        The code below is an old method of fetching lyrics. It is kept here for reference and as a backup.
-        This is, however, unreliable and therefore no longer used.
-        Depends on: @jeve/lyrics-finder
-    */
-    /*
-    async chatInputRun(interaction) {
-        await interaction.reply({ embeds: [this.container.util.embed('loading', 'Fetching lyrics...')] });
-        const dispatcher = this.container.queue.get(interaction.guildId);
-        let query = interaction.options.getString('query');
-        if (!query && !dispatcher?.current) return interaction.editReply({ embeds: [this.container.util.embed('error', 'You did not provide a query and there is nothing playing.')] });
-        if (!query) query = `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
-        const lyrics = await lyricsFinder.LyricsFinder(query);
-        if (!lyrics || lyrics instanceof Error) return interaction.editReply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.${!interaction.options.getString('query') ? ' Try searching using a query instead.' : ''}`)] });
-        const lyr = LyricsCommand.splitLyrics(lyrics);
-        const pm = new PaginatedMessage();
-        for (const page of lyr) {
-            pm.addPageEmbed((embed) => {
-                embed.setAuthor({ name: `Lyrics${!interaction.options.getString('query') ? '' : ' (Custom query)'}` })
-                    .setTitle(query)
-                    .setDescription(page)
-                    .setFooter(this.container.config.footer)
-                    .setColor('#cba6f7');
-                return embed;
-            });
-        }
-        pm.run(interaction);
+    static removeURLParams(url) {
+        if (LyricsCommand.isValidUrl(url) === false) return url;
+        const obj = new URL(url);
+        obj.search = '';
+        obj.hash = '';
+        url = obj.toString();
+        return url; 
     }
 
-    async whatsappRun({ msg, args, dispatcher}) {
-        let query = args.join(' ');
-        if (!query && !dispatcher?.current) return await msg.reply('You did not provide a query and there is nothing playing.');
-        query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`; // most common things to replace
-        const lyrics = await lyricsFinder.LyricsFinder(query);
-        if (!lyrics || lyrics instanceof Error) return msg.reply(`No results for _${query}_.${!args.length ? ' Try searching using a query instead.' : ''}`);
-        else msg.reply(`*Lyrics${!args.length ? ` (${dispatcher.current.info.title.replace('(Lyrics)', '')} - ${dispatcher.current.info.author.replace(' - Topic', '')})`: ' (Custom query)'}*\n${lyrics}`);
+    static isValidUrl(url) {
+        try {
+            new URL(url);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
-    */
 }

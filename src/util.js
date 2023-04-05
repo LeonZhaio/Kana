@@ -1,6 +1,7 @@
 import { container } from '@sapphire/framework';
 import { EmbedBuilder, ChannelType } from 'discord.js';
 import prettyms from 'pretty-ms';
+import axios from 'axios';
 
 export class Util {
     static embed(type, text, motdEnabled = true) {
@@ -59,6 +60,27 @@ export class Util {
             code += Math.floor(Math.random() * 10);
         }
         return Number(code);
+    }
+
+    static async refreshSpotifyToken() {
+        const res = await axios({
+            method: 'get',
+            url: 'https://open.spotify.com/get_access_token?reason=transport&productType=web_player',
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+                'App-platform': 'WebPlayer',
+                'Content-Type': 'text/html; charset=utf-8',
+                'cookie': `sp_dc=${container.config.sp_dc}`
+            },
+            timeout: 1000
+        });
+        if (typeof res.data !== 'object' || Array.isArray(res.data) || res.data === null || res.isAnonymous) {
+            container.logger.error('Failed to refresh Spotify access token.');
+            return false;
+        } else {
+            await container.db.set('spotify-cfg', res.data);
+            return res.data;
+        }
     }
 }
 
