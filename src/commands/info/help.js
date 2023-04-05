@@ -42,12 +42,12 @@ export class HelpCommand extends Command {
             const scObj = command.options.find(o => o.name === subcommand[1]);
             const embed = new EmbedBuilder()
                 .setColor('#cba6f7')
-                .setAuthor({ name: this.container.client.user.tag + ' - Command Information', iconURL: this.container.client.user.displayAvatarURL({ size: 4096 }), url: 'https://discord.com/oauth2/authorize?client_id=1060888178422202388&permissions=279176399936&scope=bot%20applications.commands' })
+                .setAuthor({ name: this.container.client.user.tag + ' - Subcommand Information', iconURL: this.container.client.user.displayAvatarURL({ size: 4096 }), url: 'https://discord.com/oauth2/authorize?client_id=1060888178422202388&permissions=279176399936&scope=bot%20applications.commands' })
                 .setFooter({ text: 'Made with ♡ by ' + owner.tag + ' • Thank you for using Kana.', iconURL: owner.displayAvatarURL({ dynamic: true, size: 4096 }) })
                 .addFields(
                     {
-                        name: 'Subcommand name:',
-                        value: `</${command.name} ${scObj.name}:${command.id}> (\`/${command.name} ${scObj.name}\`)`,
+                        name: 'Name:',
+                        value: `</${command.name} ${scObj.name}:${command.id}> (\`${command.name} ${scObj.name}\`)`,
                         inline: true
                     },
                     {
@@ -102,7 +102,7 @@ export class HelpCommand extends Command {
                         value: command.options.length ? command.options.map((option) => `**\`${option.name}\` ${option.required ? '(Required) ' : ''} - ${ApplicationCommandOptionType[option.type]}:** ${option.description}${option.autocomplete ? ' (Supports autocomplete)' : ''}${option.choices ? ` (${option.choices.length} choices)` : ''}`).join('\n') : 'None'
                     }
                 )
-                .setDescription('**Note:** `<>` denotes a required argument, while `[]` denotes an optional argument.');
+                .setDescription(`**Note:** \`<>\` denotes a required argument, while \`[]\` denotes an optional argument.${command.options?.filter((o) => ApplicationCommandOptionType[o.type] === 'Subcommand').length > 0 ? `\nThis command has **subcommands**. To view more information about a subcommand, use \`/help ${command.name} [subcommand]\`.` : ''}`);
             return interaction.reply({ embeds: [embed] });
         }
         const slashDoc = new EmbedBuilder()
@@ -175,7 +175,7 @@ export class HelpCommand extends Command {
         const commandList = new EmbedBuilder()
             .setColor('#cba6f7')
             .setFooter({ text: 'Made with ♡ by ' + owner.tag + ' • Thank you for using Kana.', iconURL: owner.displayAvatarURL({ dynamic: true, size: 4096 }) })
-            .setDescription('**This is a list of Kana\'s commands. To get additional information about a command, use `/help [command]`.**')
+            .setDescription('**This is a list of Kana\'s commands and subcommands. To get additional information about a command, use `/help [command]`. Click on a command to fill it into your chat input box.**')
             .addFields(
                 {
                     name: 'Music',
