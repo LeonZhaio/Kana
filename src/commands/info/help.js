@@ -226,7 +226,7 @@ export class HelpCommand extends Command {
                 tags.stripIndents`*Kana's commands:*
                 *Music:* \n\`\`\`${commands.filter((command) => command.fullCategory.includes('music') && command.whatsappRun).map((command) => command.name).join(', ')}\`\`\`
                 *Info:* \n\`\`\`${commands.filter((command) => command.fullCategory.includes('info') && command.whatsappRun).map((command) => command.name).join(', ')}\`\`\`
-                *Utility:* \n\`\`\`${commands.filter((command) => command.fullCategory.includes('utility') && command.whatsappRun).map((command) => command.name).join(', ')}\`\`\`${this.container.config.ownerIds.includes(author) ? `\n*Owner:* \n\`\`\`${commands.filter((command) => command.fullCategory.includes('owner') && command.whatsappRun).map((command) => command.name).join(', ')}\`\`\`` : ''}
+                *Utility:* \n\`\`\`${commands.filter((command) => command.fullCategory.includes('util') && command.whatsappRun).map((command) => command.name).join(', ')}\`\`\`${this.container.config.ownerIds.includes(author) ? `\n*Owner:* \n\`\`\`${commands.filter((command) => command.fullCategory.includes('owner') && command.whatsappRun).map((command) => command.name).join(', ')}\`\`\`` : ''}
                 \nFor more information on a command, type \`\`\`/help <command>\`\`\`.`
             );
         }
