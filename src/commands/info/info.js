@@ -86,6 +86,13 @@ export class InfoCommand extends Command {
                     value: String(this.container.client.guilds.cache.size),
                     inline: true
                 },
+                /*
+                {
+                    name: 'User count (Cached):',
+                    value: String(this.container.client.users.cache.size),
+                    inline: true
+                },
+                */
                 {
                     name: 'Uptime:',
                     value: ms(process.uptime() * 1000, { secondsDecimalDigits: 0 }),
