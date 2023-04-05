@@ -1515,7 +1515,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@top-gg-sdk-npm-3.1.3-c6bcb90c2d-ea271f3b19.zip/node_modules/@top-gg/sdk/",\
           "packageDependencies": [\
             ["@top-gg/sdk", "npm:3.1.3"],\
-            ["node-fetch", "virtual:c6bcb90c2dc41594ec9b87e7042e26c95e7ef334d4b34d4d0553227e6980b128135816f62ed687b183715a975d834856708081452521b8da346820cf20a17493#npm:2.6.9"],\
+            ["node-fetch", "virtual:92f1f2efba45794b813b4ccd19a54a482c97dcf8d08714de1d766b4b3ae44df020c37a2a892d3011cdc1c9be9295bd0546f9ce3d6d92125b6d47d6e969a646a9#npm:2.6.9"],\
             ["raw-body", "npm:2.5.1"]\
           ],\
           "linkType": "HARD"\
@@ -3666,10 +3666,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:92f1f2efba45794b813b4ccd19a54a482c97dcf8d08714de1d766b4b3ae44df020c37a2a892d3011cdc1c9be9295bd0546f9ce3d6d92125b6d47d6e969a646a9#npm:2.6.8", {\
-          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-d5d2a41c48/0/cache/node-fetch-npm-2.6.8-ddb8bfc274-91f57be68e.zip/node_modules/node-fetch/",\
+        ["virtual:3fc6df7d752e87fe49e3e567eeeabe5fc18742c55e9c0a5260abc35e18287fbd89a2dea3e0f6b6ccba2ca7e57527b239ac15907b5b2c34e66eb734fbefd013bd#npm:2.6.8", {\
+          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-7f5daaf6e7/0/cache/node-fetch-npm-2.6.8-ddb8bfc274-91f57be68e.zip/node_modules/node-fetch/",\
           "packageDependencies": [\
-            ["node-fetch", "virtual:92f1f2efba45794b813b4ccd19a54a482c97dcf8d08714de1d766b4b3ae44df020c37a2a892d3011cdc1c9be9295bd0546f9ce3d6d92125b6d47d6e969a646a9#npm:2.6.8"],\
+            ["node-fetch", "virtual:3fc6df7d752e87fe49e3e567eeeabe5fc18742c55e9c0a5260abc35e18287fbd89a2dea3e0f6b6ccba2ca7e57527b239ac15907b5b2c34e66eb734fbefd013bd#npm:2.6.8"],\
             ["@types/encoding", null],\
             ["encoding", null],\
             ["whatwg-url", "npm:5.0.0"]\
@@ -3680,10 +3680,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:c6bcb90c2dc41594ec9b87e7042e26c95e7ef334d4b34d4d0553227e6980b128135816f62ed687b183715a975d834856708081452521b8da346820cf20a17493#npm:2.6.9", {\
-          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-d3449a201a/0/cache/node-fetch-npm-2.6.9-9fc9a54529-acb04f9ce7.zip/node_modules/node-fetch/",\
+        ["virtual:92f1f2efba45794b813b4ccd19a54a482c97dcf8d08714de1d766b4b3ae44df020c37a2a892d3011cdc1c9be9295bd0546f9ce3d6d92125b6d47d6e969a646a9#npm:2.6.9", {\
+          "packageLocation": "./.yarn/__virtual__/node-fetch-virtual-1e40e6a666/0/cache/node-fetch-npm-2.6.9-9fc9a54529-acb04f9ce7.zip/node_modules/node-fetch/",\
           "packageDependencies": [\
-            ["node-fetch", "virtual:c6bcb90c2dc41594ec9b87e7042e26c95e7ef334d4b34d4d0553227e6980b128135816f62ed687b183715a975d834856708081452521b8da346820cf20a17493#npm:2.6.9"],\
+            ["node-fetch", "virtual:92f1f2efba45794b813b4ccd19a54a482c97dcf8d08714de1d766b4b3ae44df020c37a2a892d3011cdc1c9be9295bd0546f9ce3d6d92125b6d47d6e969a646a9#npm:2.6.9"],\
             ["@types/encoding", null],\
             ["encoding", null],\
             ["whatwg-url", "npm:5.0.0"]\
@@ -4319,7 +4319,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/shoukaku-npm-3.3.1-92f1f2efba-384bc82ad8.zip/node_modules/shoukaku/",\
           "packageDependencies": [\
             ["shoukaku", "npm:3.3.1"],\
-            ["node-fetch", "virtual:92f1f2efba45794b813b4ccd19a54a482c97dcf8d08714de1d766b4b3ae44df020c37a2a892d3011cdc1c9be9295bd0546f9ce3d6d92125b6d47d6e969a646a9#npm:2.6.8"],\
+            ["node-fetch", "virtual:92f1f2efba45794b813b4ccd19a54a482c97dcf8d08714de1d766b4b3ae44df020c37a2a892d3011cdc1c9be9295bd0546f9ce3d6d92125b6d47d6e969a646a9#npm:2.6.9"],\
             ["ws", "virtual:92f1f2efba45794b813b4ccd19a54a482c97dcf8d08714de1d766b4b3ae44df020c37a2a892d3011cdc1c9be9295bd0546f9ce3d6d92125b6d47d6e969a646a9#npm:8.12.0"]\
           ],\
           "linkType": "HARD"\
@@ -4813,7 +4813,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fs-extra", "npm:10.1.0"],\
             ["jsqr", "npm:1.4.0"],\
             ["mime", "npm:3.0.0"],\
-            ["node-fetch", "virtual:92f1f2efba45794b813b4ccd19a54a482c97dcf8d08714de1d766b4b3ae44df020c37a2a892d3011cdc1c9be9295bd0546f9ce3d6d92125b6d47d6e969a646a9#npm:2.6.8"],\
+            ["node-fetch", "virtual:3fc6df7d752e87fe49e3e567eeeabe5fc18742c55e9c0a5260abc35e18287fbd89a2dea3e0f6b6ccba2ca7e57527b239ac15907b5b2c34e66eb734fbefd013bd#npm:2.6.8"],\
             ["node-webpmux", "npm:3.1.3"],\
             ["puppeteer", "npm:13.7.0"],\
             ["unzipper", "npm:0.10.11"]\
