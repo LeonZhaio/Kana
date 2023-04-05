@@ -130,7 +130,7 @@ export class InfoCommand extends Command {
                 },
                 {
                     name: 'Memory usage:',
-                    value: `${Math.round((memory.used / (1024 * 1024 * 1024)) * 100) / 100} GB / ${Math.round((memory.total / (1024 * 1024 * 1024)) * 100) / 100} GB`,
+                    value: `${Math.round(((memory.total - memory.available) / (1024 * 1024 * 1024)) * 100) / 100} GB / ${Math.round((memory.total / (1024 * 1024 * 1024)) * 100) / 100} GB`,
                     inline: true
                 }
             ]);
