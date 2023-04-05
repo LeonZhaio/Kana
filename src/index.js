@@ -64,7 +64,7 @@ const client = new SapphireClient({
     logger: {
         level: String(process.env.NODE_ENV).toLowerCase() === 'development' ? LogLevel.Debug : LogLevel.Info
     },
-    presence: { activities: [{ name: 'starting...', type: ActivityType.Playing }], status: 'dnd' }
+    presence: { activities: [{ name: 'initialising...', type: ActivityType.Playing }], status: 'dnd' }
 });
 
 const whatsapp = new Client({
@@ -90,7 +90,7 @@ container.logWebhook = new WebhookClient({ url: config.logWebhook });
 container.db = new Keyv(config.databaseUrl, { collection: coll });
 if (config.topggToken) container.autoposter = AutoPoster(config.topggToken, client, { interval: 900000, postOnStart: true });
 container.shoukaku = new Shoukaku(new Connectors.DiscordJS(client), config.lavalink, {
-    userAgent: `Kana-${version}`,
+    userAgent: 'Kana',
     reconnectTries: 10
 });
 
