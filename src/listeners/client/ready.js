@@ -46,20 +46,18 @@ export class ReadyListener extends Listener {
 
             if (maintenance && client.user.presence.activities[0].name !== 'maintenance mode') {
                 client.user.setPresence({ activities: [{ name: 'maintenance mode', type: ActivityType.Playing }], status: 'dnd' });
-                this.container.logger.debug('Presence updated.');
             }
             if (motd.enabled && client.user.presence.activities[0].name !== motd.presence.name) {
                 client.user.setPresence({ activities: [motd.presence], status: motd.presence.status });
-                this.container.logger.debug('Presence updated.');
             }
             if (!maintenance && !motd.enabled && this.container.presenceUpdateRequired) {
                 const activity = _.cloneDeep(this.container.config.activities[this.container.statusRotatorCurrent]);
                 activity.name = activity.name
                     .replace('{version}', this.container.client.version)
-                    .replace('{serverCount}', this.container.client.guilds.cache.size);
+                    .replace('{serverCount}', this.container.client.guilds.cache.size)
+                    .replace('{userCount}', this.container.client.users.cache.size);
                 if (client.user.presence.activities.name !== activity.name) {
                     client.user.setPresence({ activities: [activity], status: activity.status });
-                    this.container.logger.debug('Presence updated.');
                 }
                 this.container.statusRotatorCurrent = this.container.statusRotatorCurrent >= this.container.config.activities.length - 1 ? 0 : this.container.statusRotatorCurrent + 1;
                 this.container.presenceUpdateRequired = false;
@@ -126,5 +124,7 @@ export class ReadyListener extends Listener {
             if (botsggRes.status === 200) this.container.logger.debug('Stats posted to discord.bots.gg.');
             else this.container.logger.error(`Error while posting stats to discord.bots.gg: ${botsggRes.data}`);
         }, 900000);
+
+        this.container.logWebhook.send('**Kana is initialised and ready.**');
     }
 }
