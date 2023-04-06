@@ -210,7 +210,14 @@ export class PlaylistCommand extends Subcommand {
                             option
                                 .setName('id')
                                 .setDescription('The name / ID of the playlist you would like to load (allows public)')
-                                .setRequired(true))
+                                .setRequired(true)
+                        )
+                        .addIntegerOption((option) => 
+                            option
+                                .setName('track')
+                                .setDescription('The index of a specific track to add from this playlist.')
+                                .setRequired(false)
+                        )
                 )
                 .addSubcommand((command) =>
                     command
@@ -457,6 +464,7 @@ export class PlaylistCommand extends Subcommand {
     async playlistLoad(interaction) {
         const node = this.container.shoukaku.getNode();
         const id = interaction.options.getString('id');
+        const index = interaction.options.getInteger('track');
         const playlists = await this.container.db.get('playlists');
         const publicPlaylists = Object.values(playlists).filter(playlist => playlist.info.private === false);
         const userPlaylists = Object.values(playlists).filter(playlist => playlist.info.owner === interaction.user.id);
@@ -465,6 +473,12 @@ export class PlaylistCommand extends Subcommand {
         if (interaction.guild.members.me.voice.channelId !== null && this.container.queue.get(interaction.guildId)?.current && interaction.member.voice.channel.id !== interaction.guild.members.me.voice.channel.id) return interaction.reply({ embeds: [this.container.util.embed('error', `Join <#${interaction.guild.members.me.voice.channel.id}> before executing this command.`)], ephemeral: true });
         if (!interaction.member.voice.channel.joinable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to join <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
         if (!interaction.member.voice.channel.speakable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to play audio in <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
+        if (index) {
+            if (index > selectedPlaylist.tracks.length || index < 1) return interaction.reply({ embeds: [this.container.util.embed('error', 'Invalid track index.')], ephemeral: true });
+            const track = selectedPlaylist.tracks[index - 1];
+            this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track);
+            return interaction.reply({ embeds: [this.container.util.embed('success', `Queued **${track.info.title}** - **${track.info.author}** from **${selectedPlaylist.info.name}**.`)] });
+        }
         for (const track of selectedPlaylist.tracks) await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track);
         return interaction.reply({ embeds: [this.container.util.embed('success', `Queued **${selectedPlaylist.tracks.length} tracks** from **${selectedPlaylist.info.name}**.`)] });
     }
