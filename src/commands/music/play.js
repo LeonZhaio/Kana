@@ -106,7 +106,7 @@ export class PlayCommand extends Command {
             if (playlist) {
                 for (const track of result.tracks) await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track);
             }
-            await interaction.reply({ embeds: [this.container.util.embed('success', playlist ? `Queued **${result.tracks.length + 1} tracks** from **${result.playlistInfo.name}**.` : `Queued [**${track.info.title}** - **${track.info.author}**](${track.info.uri}).`)] }).catch(() => null);
+            await interaction.reply({ embeds: [this.container.util.embed('success', playlist ? `Queued **${result.tracks.length + 1} tracks** from **${result.playlistInfo.name}**.` : (next ? `Added [**${track.info.title}** - **${track.info.author}**](${track.info.uri}) to the top of the queue.` : `Queued [**${track.info.title}** - **${track.info.author}**](${track.info.uri}).`))] }).catch(() => null);
             if (!dispatcher?.current) dispatcher?.play();
             return;
         }
@@ -116,7 +116,7 @@ export class PlayCommand extends Command {
         const track = search.tracks.shift();
         const dispatcher = await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track, next);
         if (dispatcher === 'Busy') return interaction.reply({ embeds: [this.container.util.embed('error', 'The dispatcher is currently busy, please try again later.')], ephemeral: true });
-        await interaction.reply({ embeds: [this.container.util.embed('success', `Queued [**${track.info.title}** - **${track.info.author}**](${track.info.uri}).`)] }).catch(() => null);
+        await interaction.reply({ embeds: [this.container.util.embed('success', next ? `Added [**${track.info.title}** - **${track.info.author}**](${track.info.uri}) to the top of the queue.` : `Queued [**${track.info.title}** - **${track.info.author}**](${track.info.uri}).`)] }).catch(() => null);
         if (!dispatcher?.current) dispatcher?.play();
     }
     
@@ -262,7 +262,7 @@ export class PlayCommand extends Command {
             if (playlist) {
                 for (const track of result.tracks) await this.container.queue.handle(voiceChannel.guild, member, voiceChannel, node, track);
             }
-            await msg.reply(playlist ? `Queued *${result.tracks.length + 1} tracks* from *${result.playlistInfo.name}*.` : `Queued *${track.info.title}* - *${track.info.author}*.`).catch(() => null);
+            await msg.reply(playlist ? `Queued *${result.tracks.length + 1} tracks* from *${result.playlistInfo.name}*.` : (next ? `Added *${track.info.title}* - *${track.info.author}* to the top of the queue.` : `Queued *${track.info.title}* - *${track.info.author}*.`)).catch(() => null);
             if (!dispatcher?.current) dispatcher?.play();
             return;
         }
@@ -272,7 +272,7 @@ export class PlayCommand extends Command {
         const track = search.tracks.shift();
         const dispatcher = await this.container.queue.handle(voiceChannel.guild, member, voiceChannel, node, track, next);
         if (dispatcher === 'Busy') return msg.reply('The dispatcher is busy, please try again later.');
-        await msg.reply(`Queued *${track.info.title}* - *${track.info.author}*.`).catch(() => null);
+        await msg.reply(next ? `Added *${track.info.title}* - *${track.info.author}* to the top of the queue.` : `Queued *${track.info.title}* - *${track.info.author}*.`).catch(() => null);
         if (!dispatcher?.current) dispatcher?.play();
     }
 
