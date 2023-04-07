@@ -171,9 +171,10 @@ export class LyricsCommand extends Command {
     }
 
     static stringMatchPercentage(str1, str2) {
-        // Convert both strings to lowercase to ensure a case-insensitive comparison
-        str1 = str1.toLowerCase();
-        str2 = str2.toLowerCase();
+        // Convert both strings to lowercase to ensure a case-insensitive comparison & remove special characters
+        const regex = /[-[\]{}()*+?.,\\^$|#\s]/g;
+        str1 = str1.toLowerCase().replace(regex, '');
+        str2 = str2.toLowerCase().replace(regex, '');
       
         // Calculate the edit distance between the two strings using the Levenshtein distance algorithm
         const matrix = [];
