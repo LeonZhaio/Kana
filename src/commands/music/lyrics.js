@@ -40,11 +40,9 @@ export class LyricsCommand extends Command {
         let customQ;
         if (!query && dispatcher.current.info.sourceName == 'spotify') {
             iden = dispatcher.current.info.identifier;
-        } else if (query && query.startsWith('ac::')) {
-            iden = query.replace('ac::', '');
         } else {
-            query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '').replace(`(${dispatcher.current.info.title.replace(/\(.*?\)/g, '').trim()})`, '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`;
             const node = this.container.shoukaku.getNode();
+            query = query || `${dispatcher.current.info.title.replace('(Lyrics)', '').replace(`(${dispatcher.current.info.title.replace(/\(.*?\)/g, '').trim()})`, '')} - ${dispatcher.current.info.author.replace(' - Topic', '')}`;
             let result;
             let finalRes;
             const spotifyURL = query.startsWith('https://open.spotify.com/track/');
@@ -111,7 +109,7 @@ export class LyricsCommand extends Command {
         }
         let query = interaction.options.getString('query');
         const search = await node.rest.resolve(`spsearch:${query}`);
-        return interaction.respond(search.tracks.map((track) => ({ name: LyricsCommand.truncate(`${track.info.title} - ${track.info.author}`, 97), value: `ac::${track.info.identifier}` }))).catch(() => null);
+        return interaction.respond(search.tracks.map((track) => ({ name: LyricsCommand.truncate(`${track.info.title} - ${track.info.author}`, 97), value: `${track.info.uri}` }))).catch(() => null);
     }
 
     async whatsappRun({ msg, args, dispatcher }) {
