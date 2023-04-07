@@ -81,7 +81,7 @@ export class PlayCommand extends Command {
     async chatInputRun(interaction) {
         const kana_playlist = interaction.options.getString('kana-playlist');
         const query = interaction.options.getString('query');
-        const source = interaction.options.getString('source') || 'ytmsearch';
+        const source = interaction.options.getString('source') || this.container.config.defaultSearchProvider;
         const next = interaction.options.getBoolean('next') || false;
         const node = this.container.shoukaku.getNode();
         if (!interaction.member.voice.channel.joinable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to join <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
@@ -164,8 +164,8 @@ export class PlayCommand extends Command {
             query = query.replace('ym:', '');
             qSource = 'ymsearch:';
         } else qSource = undefined;
-        let search = await node.rest.resolve(`${qSource || 'ytmsearch'}:${query}`);
-        if (!search?.tracks.length) search = await node.rest.resolve(`${qSource || 'ytmsearch'}:${query}`);
+        let search = await node.rest.resolve(`${qSource || this.container.config.defaultSearchProvider}:${query}`);
+        if (!search?.tracks.length) search = await node.rest.resolve(`${qSource || this.container.config.defaultSearchProvider}:${query}`);
         if (!search?.tracks.length) return interaction.reply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.`)], ephemeral: true });
         const track = search.tracks.shift();
         console.log(interaction);
@@ -206,7 +206,7 @@ export class PlayCommand extends Command {
             qSource = 'ymsearch:';
         } else qSource = undefined;
         if (!query) return;
-        const source = qSource || interaction.options.getString('source') || 'ytmsearch';
+        const source = qSource || interaction.options.getString('source') || this.container.config.defaultSearchProvider;
         const search = await node.rest.resolve(`${source}:${query}`);
         if (search.loadType !== 'SEARCH_RESULT') return interaction.respond([{ name: PlayCommand.truncate(query, 97), value: query }]);
         return interaction.respond(search.tracks.map((track) => ({ name: PlayCommand.truncate(`${track.info.title} - ${track.info.author}`, 97), value: track.info.uri }))).catch(() => null);
@@ -241,7 +241,7 @@ export class PlayCommand extends Command {
         } else if (query.includes('ym:') || query.includes('--yandexmusic') || query.includes('-ym')) {
             query = query.replace('ym:', '').replace('--yandexmusic', '').replace('-ym', '');
             qSource = 'ymsearch';
-        } else qSource = 'ytmsearch';
+        } else qSource = this.container.config.defaultSearchProvider;
         query = query.trim();
         if (!query) return msg.reply('Please provide a query.');
         const node = this.container.shoukaku.getNode();

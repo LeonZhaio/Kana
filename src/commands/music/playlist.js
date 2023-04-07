@@ -404,7 +404,7 @@ export class PlaylistCommand extends Subcommand {
     async playlistAdd(interaction) {
         const playlists = await this.container.db.get('playlists');
         const query = interaction.options.getString('query');
-        const source = interaction.options.getString('source') || 'ytmsearch';
+        const source = interaction.options.getString('source') || this.container.config.defaultSearchProvider;
         const id = interaction.options.getString('id');
         const userPlaylists = Object.values(playlists).filter(playlist => playlist.info.owner === interaction.user.id);
         const playlist = Object.values(userPlaylists).find(playlist => playlist.info.name.toLowerCase() === id.toLowerCase() || playlist.info.id === id);
@@ -540,7 +540,7 @@ export class PlaylistCommand extends Subcommand {
             qSource = 'ymsearch:';
         } else qSource = undefined;
         if (!query) return;
-        const source = qSource || interaction.options.getString('source') || 'ytmsearch';
+        const source = qSource || interaction.options.getString('source') || this.container.config.defaultSearchProvider;
         const search = await node.rest.resolve(`${source}:${query}`);
         if (search.loadType !== 'SEARCH_RESULT') return interaction.respond([{ name: PlaylistCommand.truncate(query, 97), value: query }]);
         return interaction.respond(search.tracks.map((track) => ({ name: PlaylistCommand.truncate(`${track.info.title} - ${track.info.author}`, 97), value: track.info.uri }))).catch(() => null);
