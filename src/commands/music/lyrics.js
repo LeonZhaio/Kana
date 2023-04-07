@@ -194,7 +194,7 @@ export class LyricsCommand extends Command {
     }
 
     static splitLyrics (lyrics) {
-        const maxCharsInAPage = 2000;
+        const maxCharsInAPage = 1024;
         const lineArray = lyrics.split('\n');
         const pages = [];
         for (let i = 0; i < lineArray.length; i++) {
