@@ -126,7 +126,8 @@ export class HelpCommand extends Command {
                 'Subcommands are a way to categorise commands. If you type `/playlist`, you will see a list of subcommands related to playlist management. ' +
                 'These work the same ways that normal commands do, and have the same features.\n\n' +
                 '*This should be everything that you need to know to use Kana.\nNeed more help? Join the [support server](https://discord.gg/w9MjahmXYv)!*'
-            );
+            )
+            .setImage('https://raw.githubusercontent.com/thaddeuskkr/Kana/master/assets/play.gif');
         const musicCommands = [];
         const infoCommands = [];
         const utilCommands = [];
