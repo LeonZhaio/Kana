@@ -20,7 +20,7 @@ export class VolumeCommand extends Command {
                 .addIntegerOption((option) => 
                     option
                         .setName('new-volume')
-                        .setDescription('Sets the new volume of the player (%), accepts an integer between 0 and 200.')
+                        .setDescription('Sets the new volume of the player (%), accepts an integer between 0 and 250.')
                         .setRequired(false)
                 )
         );
