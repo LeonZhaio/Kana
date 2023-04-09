@@ -33,7 +33,7 @@ export class LyricsCommand extends Command {
 
     async chatInputRun(interaction) {
         const dispatcher = this.container.queue.get(interaction.guildId);
-        let query = interaction.options.getString('query');
+        let query = interaction.options?.getString('query');
         if (!query && !dispatcher?.current) return interaction.reply({ embeds: [this.container.util.embed('error', 'You did not provide a query and there is nothing playing.')], ephemeral: true });
         await interaction.reply({ embeds: [this.container.util.embed('loading', 'Fetching lyrics...')] });
         let iden;
