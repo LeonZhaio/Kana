@@ -1,5 +1,5 @@
 import { container } from '@sapphire/framework';
-import { EmbedBuilder, ChannelType } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ChannelType } from 'discord.js';
 import prettyms from 'pretty-ms';
 import axios from 'axios';
 
@@ -139,6 +139,7 @@ export class Dispatcher {
         this.current = null;
         this.stopped = false;
         this.previous = [];
+        this.previousUsed = false;
         let _notifiedOnce = false;
         let _errorHandler = data => {
             if ((data instanceof Error || data instanceof Object) && data.code !== 4014) container.logger.error(data);
@@ -154,6 +155,52 @@ export class Dispatcher {
                 } else if (this.repeat === 'all' || this.repeat === 'off') {
                     _notifiedOnce = false;
                 }
+                const row = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('previous')
+                            .setLabel('Previous')
+                            .setStyle(ButtonStyle.Primary)
+                            .setEmoji('⏮️'),
+                        new ButtonBuilder()
+                            .setCustomId('playback')
+                            .setLabel('Pause / Resume')
+                            .setStyle(ButtonStyle.Success)
+                            .setEmoji('⏯️'),
+                        new ButtonBuilder()
+                            .setCustomId('skip')
+                            .setLabel('Skip')
+                            .setStyle(ButtonStyle.Primary)
+                            .setEmoji('⏭️'),
+                        new ButtonBuilder()
+                            .setCustomId('stop')
+                            .setLabel('Stop')
+                            .setStyle(ButtonStyle.Danger)
+                            .setEmoji('⏹️')
+                    );
+                const row2 = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('shuffle')
+                            .setLabel('Shuffle')
+                            .setStyle(ButtonStyle.Secondary)
+                            .setEmoji('🔀'),
+                        new ButtonBuilder()
+                            .setCustomId('repeat')
+                            .setLabel('Repeat')
+                            .setStyle(ButtonStyle.Secondary)
+                            .setEmoji('🔁'),
+                        new ButtonBuilder()
+                            .setCustomId('queue')
+                            .setLabel('Queue')
+                            .setStyle(ButtonStyle.Secondary)
+                            .setEmoji('📃'),
+                        new ButtonBuilder()
+                            .setCustomId('lyrics')
+                            .setLabel('Lyrics')
+                            .setStyle(ButtonStyle.Secondary)
+                            .setEmoji('📝'),
+                    );
                 if (this.nowPlayingMessage) {
                     const msgs = await this.channel.messages.fetch({ limit: 1, force: true });
                     if (msgs.first().id === this.nowPlayingMessage.id) {
@@ -166,7 +213,7 @@ export class Dispatcher {
                     }
                 }
                 this.nowPlayingMessage = await this.channel
-                    .send({ embeds: [ Util.embed('info', `${container.config.emojis.playing} [**${this.current.info.title}** - **${this.current.info.author}**](${this.current.info.uri}) \`${Dispatcher.humanizeTime(this.current.info.length)}\` (${this.current.info.requester.toString()})`, false) ] })
+                    .send({ embeds: [ Util.embed('info', `${container.config.emojis.playing} [**${this.current.info.title}** - **${this.current.info.author}**](${this.current.info.uri}) \`${Dispatcher.humanizeTime(this.current.info.length)}\` (${this.current.info.requester.toString()})`, false) ], components: [row, row2] })
                     .catch(() => null);
             })
             .on('end', async () => {
@@ -176,7 +223,8 @@ export class Dispatcher {
                 if (this.repeat === 'one') this.queue.unshift(this.current);
                 if (this.repeat === 'all' && !this.current.skipped) this.queue.push(this.current);
                 if (this.nowPlayingMessage && this.repeat !== 'one') {
-                    this.previous.unshift(this.current);
+                    if (this.previousUsed == false) this.previous.unshift(this.current);
+                    this.previousUsed = false;
                     const msgs = await this.channel.messages.fetch({ limit: 1, force: true });
                     if (msgs.first().id === this.nowPlayingMessage.id) return this.play();
                     else {
