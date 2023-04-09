@@ -63,17 +63,23 @@ export class Util {
     }
 
     static async refreshSpotifyToken() {
-        const res = await axios({
-            method: 'get',
-            url: 'https://open.spotify.com/get_access_token?reason=transport&productType=web_player',
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
-                'App-platform': 'WebPlayer',
-                'Content-Type': 'text/html; charset=utf-8',
-                'cookie': `sp_dc=${container.config.sp_dc}`
-            },
-            timeout: 1000
-        });
+        let res;
+        try {
+            res = await axios({
+                method: 'get',
+                url: 'https://open.spotify.com/get_access_token?reason=transport&productType=web_player',
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+                    'App-platform': 'WebPlayer',
+                    'Content-Type': 'text/html; charset=utf-8',
+                    'cookie': `sp_dc=${container.config.sp_dc}`
+                },
+                timeout: 1000
+            });
+        } catch (e) {
+            container.logger.error('Failed to refresh Spotify access token.');
+            return false;
+        }
         if (typeof res.data !== 'object' || Array.isArray(res.data) || res.data === null || res.isAnonymous) {
             container.logger.error('Failed to refresh Spotify access token.');
             return false;
