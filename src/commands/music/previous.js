@@ -21,10 +21,13 @@ export class PreviousCommand extends Command {
     
     async chatInputRun(interaction) {
         const dispatcher = this.container.queue.get(interaction.guildId);
+        if (!dispatcher.previous.length) return await interaction.reply({ embeds: [this.container.util.embed('error', 'There is no previous track to return to.')], ephemeral: true });
         await interaction.reply({ embeds: [this.container.util.embed('success', `Returned to the previous track **${dispatcher.previous[0].info.title}** - **${dispatcher.previous[0].info.author}**${dispatcher.repeat === 'one' ? ' and turned off track repeat' : ''}.`)] });
+        const prev = dispatcher.previous.shift();
+        dispatcher.previousUsed = true;
         if (dispatcher.repeat === 'one') dispatcher.repeat = 'off';
         dispatcher.queue.unshift(dispatcher.current);
-        dispatcher.queue.unshift(dispatcher.previous[0]);
+        dispatcher.queue.unshift(prev);
         await dispatcher.player.stopTrack();
     }
 
