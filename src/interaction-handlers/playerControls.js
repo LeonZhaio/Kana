@@ -63,6 +63,11 @@ export class PlayerControlsHandler extends InteractionHandler {
             await interaction.guild.members.me.voice.disconnect().catch(() => null);
             await dispatcher.destroy().catch(() => null);
             break;
+        case 'rewind':
+            if (dispatcher.current.info.requester.id == interaction.user.id) await interaction.deferUpdate();
+            else await interaction.reply({ embeds: [this.container.util.embed('success', `Restarted **${dispatcher.current.info.title}** - **${dispatcher.current.info.author}**. [${interaction.user.toString()}]`)] });
+            dispatcher.player.seekTo(0);
+            break;
         case 'shuffle':
             if (!dispatcher.queue.length) return interaction.reply({ embeds: [this.container.util.embed('error', 'There are no tracks in queue.')], ephemeral: true });
             dispatcher.queue = dispatcher.queue.sort(() => Math.random() - 0.5);

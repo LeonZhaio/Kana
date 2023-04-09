@@ -187,6 +187,11 @@ export class Dispatcher {
                 const row2 = new ActionRowBuilder()
                     .addComponents(
                         new ButtonBuilder()
+                            .setCustomId('rewind')
+                            .setLabel('Rewind')
+                            .setStyle(ButtonStyle.Secondary)
+                            .setEmoji('⏪'),
+                        new ButtonBuilder()
                             .setCustomId('shuffle')
                             .setLabel('Shuffle')
                             .setStyle(ButtonStyle.Secondary)
