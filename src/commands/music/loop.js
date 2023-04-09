@@ -1,12 +1,12 @@
 import { Command } from '@sapphire/framework';
 
-export class RepeatCommand extends Command {
+export class LoopCommand extends Command {
     constructor(context, options) {
         super(context, {
             ...options,
-            name: 'repeat',
-            description: 'Turns on or off repeat for the current track or the entire queue.',
-            aliases: ['loop'],
+            name: 'loop',
+            description: 'Loops the current track or the entire queue.',
+            aliases: ['repeat'],
             preconditions: ['voice', 'sameVoice', 'dispatcher']
         });
     }
@@ -37,16 +37,16 @@ export class RepeatCommand extends Command {
         let text = '';
         switch(mode) {
         case 'one':
-            text = 'Now repeating the currently playing track.';
+            text = 'Now looping the currently playing track.';
             break;
         case 'all':
             if (!dispatcher.queue.length) {
                 return interaction.reply({ embeds: [this.container.util.embed('error', 'There are no tracks in queue.')] });
             }
-            text = 'Now repeating the whole queue.';
+            text = 'Now looping the whole queue.';
             break;
         case 'off':
-            text = 'Disabled repeat.';
+            text = 'Disabled loop.';
             break;
         default:
             return interaction.reply({ embeds: [this.container.util.embed('error', 'Unrecognised option.')] }); 
@@ -65,16 +65,16 @@ export class RepeatCommand extends Command {
         let text = '';
         switch(mode) {
         case 'one':
-            text = 'Now repeating the currently playing track.';
+            text = 'Now looping the currently playing track.';
             break;
         case 'all':
             if (!dispatcher.queue.length) {
                 return msg.reply('There are no tracks in queue, therefore this mode is disabled.');
             }
-            text = 'Now repeating the whole queue.';
+            text = 'Now looping the whole queue.';
             break;
         case 'off':
-            text = 'Disabled repeat.';
+            text = 'Disabled loop.';
             break;
         default:
             return msg.reply('Unrecognised option.');
