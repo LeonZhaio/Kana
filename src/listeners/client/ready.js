@@ -98,6 +98,7 @@ export class ReadyListener extends Listener {
 
         // Posting stats to different bot lists (every 15 minutes)
         setInterval(async () => {
+            if (process.env.TYPE && process.env.TYPE == 'canary') return;
             const serverCount = this.container.client.guilds.cache.size;
             const discordsRes = await axios({
                 url: `https://discords.com/bots/api/bot/${this.container.client.user.id}`,
