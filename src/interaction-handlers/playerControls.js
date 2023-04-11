@@ -20,6 +20,8 @@ export class PlayerControlsHandler extends InteractionHandler {
 
     async run(interaction) {
         const dispatcher = this.container.queue.get(interaction.guildId);
+        if (!dispatcher || !dispatcher?.current) return await interaction.reply({ embeds: [this.container.util.embed('error', 'There is nothing playing.')], ephemeral: true });
+        if (interaction.member.voice.channelId !== null && interaction.member.voice.channel.id !== interaction.guild.members.me.voice.channel.id) return await interaction.reply({ embeds: [this.container.util.embed('error', `Join <#${interaction.guild.members.me.voice.channel.id}> before using this button.`)], ephemeral: true });
         switch (interaction.customId) {
         case 'previous':
             if (!dispatcher.previous.length) return await interaction.reply({ embeds: [this.container.util.embed('error', 'There is no previous track to return to.')], ephemeral: true });
