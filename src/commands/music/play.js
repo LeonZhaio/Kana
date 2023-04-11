@@ -122,57 +122,51 @@ export class PlayCommand extends Command {
     
     async contextMenuRun(interaction) {
         const node = this.container.shoukaku.getNode();
+        const attachments = [];
+        const attachmentsArray = Array.from(interaction.targetMessage.attachments.values());
+        let tracksLoaded = 0;
+        if (attachmentsArray.length > 0) {
+            for (let i = 0; i < attachmentsArray.length; i++) {
+                if (!attachmentsArray[i].contentType.includes('audio/')) break;
+                else attachments.push(attachmentsArray[i].url);
+            }
+        }
+        for (let i = 0; i < attachments.length; i++) {
+            const result = await node.rest.resolve(attachments[i]);
+            if (!result?.tracks.length) continue;
+            const track = result.tracks.shift();
+            const dispatcher = await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track);
+            if (dispatcher === 'Busy') return interaction.reply({ embeds: [this.container.util.embed('error', 'The dispatcher is currently busy, please try again later.')], ephemeral: true });
+            tracksLoaded++;
+            if (!dispatcher?.current) dispatcher?.play();
+        }
         let query = interaction.targetMessage.content;
-        if (!query) return interaction.reply({ embeds: [this.container.util.embed('error', 'The message you selected has no content.')], ephemeral: true });
         if (!interaction.member.voice.channel.joinable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to join <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
         if (!interaction.member.voice.channel.speakable) return interaction.reply({ embeds: [this.container.util.embed('error', `I don't have permission to play audio in <#${interaction.member.voice.channel.id}>.`)], ephemeral: true });
-        if (PlayCommand.extractURL(query)) {
-            let result = await node.rest.resolve(PlayCommand.extractURL(query)[0]);
-            if (!result?.tracks.length) result = await node.rest.resolve(PlayCommand.extractURL(query)[0]);
-            if (!result?.tracks.length) return interaction.reply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.`)], ephemeral: true });
-            const track = result.tracks.shift();
-            const playlist = result.loadType === 'PLAYLIST_LOADED';
-            const dispatcher = await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track, playlist ? false : (query.includes('--playnext') || query.includes('-pn')));
-            if (dispatcher === 'Busy') return interaction.reply({ embeds: [this.container.util.embed('error', 'The dispatcher is currently busy, please try again later.')], ephemeral: true });
-            if (playlist) {
-                for (const track of result.tracks) await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track);
+        const urls = PlayCommand.extractURL(query);
+        if (urls?.length > 0) {
+            for (let i = 0; i < urls.length; i++) {
+                let result = await node.rest.resolve(urls[i]);
+                if (!result?.tracks.length) result = await node.rest.resolve(urls[i]);
+                const track = result.tracks.shift();
+                tracksLoaded++;
+                const playlist = result.loadType === 'PLAYLIST_LOADED';
+                const dispatcher = await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track, playlist ? false : (query.includes('--playnext') || query.includes('-pn')));
+                if (dispatcher === 'Busy') return interaction.reply({ embeds: [this.container.util.embed('error', 'The dispatcher is currently busy, please try again later.')], ephemeral: true });
+                tracksLoaded += result.tracks.length;
+                if (playlist) {
+                    for (const track of result.tracks) await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track);
+                }
+                if (!dispatcher?.current) dispatcher?.play();
             }
-            await interaction.reply({ embeds: [this.container.util.embed('success', playlist ? `Queued **${result.tracks.length + 1} tracks** from **${result.playlistInfo.name}**.` : `Queued [**${track.info.title}** - **${track.info.author}**](${track.info.uri}).`)] }).catch(() => null);
-            if (!dispatcher?.current) dispatcher?.play();
+            await interaction.reply({ embeds: [this.container.util.embed('success', `Queued **${tracksLoaded} track(s)**.`)] }).catch(() => null);
             return;
+        } else if (!attachments.length) {
+            await interaction.reply({ embeds: [this.container.util.embed('error', 'No links or attachments found.')], ephemeral: true });
+            return;
+        } else {
+            await interaction.reply({ embeds: [this.container.util.embed('success', `Queued **${tracksLoaded} track(s)**.`)] }).catch(() => null);
         }
-        let qSource;
-        if (query.includes('yt:')) {
-            query = query.replace('yt:', '');
-            qSource = 'ytsearch';
-        } else if (query.includes('ytm:')) {
-            query = query.replace('ytm:', '');
-            qSource = 'ytmsearch';
-        } else if (query.includes('sc:')) {
-            query = query.replace('sc:', '');
-            qSource = 'scsearch';
-        } else if (query.includes('sp:')) {
-            query = query.replace('sp:', '');
-            qSource = 'spsearch';
-        } else if (query.includes('am:')) {
-            query = query.replace('am:', '');
-            qSource = 'amsearch:';
-        } else if (query.includes('dz:')) {
-            query = query.replace('dz:', '');
-            qSource = 'dzsearch';
-        } else if (query.includes('ym:')) {
-            query = query.replace('ym:', '');
-            qSource = 'ymsearch:';
-        } else qSource = undefined;
-        let search = await node.rest.resolve(`${qSource || this.container.config.defaultSearchProvider}:${query}`);
-        if (!search?.tracks.length) search = await node.rest.resolve(`${qSource || this.container.config.defaultSearchProvider}:${query}`);
-        if (!search?.tracks.length) return interaction.reply({ embeds: [this.container.util.embed('error', `No results for \`${query}\`.`)], ephemeral: true });
-        const track = search.tracks.shift();
-        console.log(interaction);
-        const dispatcher = await this.container.queue.handle(interaction.guild, interaction.member, interaction.channel, node, track, false);
-        if (dispatcher === 'Busy') return interaction.reply({ embeds: [this.container.util.embed('error', 'The dispatcher is currently busy, please try again later.')], ephemeral: true });
-        await interaction.reply({ embeds: [this.container.util.embed('success', `Queued [**${track.info.title}** - **${track.info.author}**](${track.info.uri}).`)] }).catch(() => null);
-        if (!dispatcher?.current) dispatcher?.play();
     }
 
     async autocompleteRun(interaction) {
