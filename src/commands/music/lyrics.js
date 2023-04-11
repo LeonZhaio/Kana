@@ -84,7 +84,7 @@ export class LyricsCommand extends Command {
             const pm = new PaginatedMessage();
             for (const page of lyr) {
                 pm.addPageEmbed((embed) => {
-                    embed.setAuthor({ name: 'Lyrics' })
+                    embed.setAuthor({ name: `Lyrics [${interaction.user.tag}]` })
                         .setTitle(customQ || `${dispatcher.current.info.title} - ${dispatcher.current.info.author}`)
                         .setDescription(page)
                         .setFooter({ text: `Provided by ${lyrics.providerDisplayName} | ` + this.container.config.footer.text, iconURL: this.container.config.footer.iconURL })
